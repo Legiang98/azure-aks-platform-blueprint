@@ -1,0 +1,31 @@
+name: Workflow YAML Validation
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/*.yaml"
+      - ".github/dependabot.yaml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/*.yaml"
+      - ".github/dependabot.yaml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate GitHub YAML files
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Parse workflow and Dependabot YAML
+        run: |
+          ruby -e 'require "yaml"; ARGV.each { |p| YAML.load_stream(File.read(p)) }; puts "Validated #{ARGV.length} YAML files."' .github/workflows/*.yaml .github/dependabot.yaml

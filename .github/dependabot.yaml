@@ -1,0 +1,161 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - github-actions
+
+  - package-ecosystem: npm
+    directory: /platform/database-security
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - npm
+
+  - package-ecosystem: npm
+    directory: /platform/extension-sdk/node
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - npm
+
+  - package-ecosystem: npm
+    directory: /apps/platform-monitoring-dashboard/frontend
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - npm
+
+  - package-ecosystem: npm
+    directory: /apps/boutique-app/src/currencyservice
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - npm
+
+  - package-ecosystem: npm
+    directory: /apps/boutique-app/src/paymentservice
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - npm
+
+  - package-ecosystem: pip
+    directory: /apps/platform-monitoring-dashboard/backend
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - python
+
+  - package-ecosystem: pip
+    directory: /apps/boutique-app/src/emailservice
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - python
+
+  - package-ecosystem: pip
+    directory: /apps/boutique-app/src/loadgenerator
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - python
+
+  - package-ecosystem: pip
+    directory: /apps/boutique-app/src/recommendationservice
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - python
+
+  - package-ecosystem: pip
+    directory: /apps/boutique-app/src/shoppingassistantservice
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - python
+
+  - package-ecosystem: gomod
+    directory: /platform/extension-sdk/go
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - go
+
+  - package-ecosystem: gomod
+    directory: /apps/boutique-app/src/checkoutservice
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - go
+
+  - package-ecosystem: gomod
+    directory: /apps/boutique-app/src/frontend
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - go
+
+  - package-ecosystem: gomod
+    directory: /apps/boutique-app/src/productcatalogservice
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - go
+
+  - package-ecosystem: gomod
+    directory: /apps/boutique-app/src/shippingservice
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - go
+
+  - package-ecosystem: maven
+    directory: /platform/extension-sdk/java
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - java
+
+  - package-ecosystem: gradle
+    directory: /apps/boutique-app/src/adservice
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - java
+
+  - package-ecosystem: nuget
+    directory: /platform/extension-sdk/dotnet
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - dotnet
+
+  - package-ecosystem: nuget
+    directory: /apps/boutique-app/src/cartservice
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - dotnet

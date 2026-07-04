@@ -15,6 +15,7 @@ This repository demonstrates an Azure-first platform engineering reference patte
 - Use Pulumi for database security baselines.
 - Separate infrastructure, database security, application deployment, and schema migration responsibilities.
 - Prefer secure identity, least privilege, private networking, observability, and clear documentation.
+- Use security automation for SAST, secret scanning, IaC scanning, and dependency updates.
 - Keep all examples reusable and safe to publish publicly.
 
 ## Non-goals

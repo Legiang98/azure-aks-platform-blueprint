@@ -40,3 +40,44 @@ Use placeholders such as:
 - Use least-privilege permissions.
 - Separate platform operator, application runtime, migration, and reporting access.
 - Document any demo-only broad permission with a clear reason and cleanup path.
+
+## Security Automation
+
+The repository uses layered security checks:
+
+- CodeQL scans application and SDK code for SAST findings.
+- Gitleaks scans the repository for committed secrets.
+- Checkov scans Terraform, Kubernetes, Helm, Dockerfiles, and GitHub Actions for IaC and configuration risks.
+- Workflow YAML Validation catches broken GitHub Actions and Dependabot YAML before merge.
+- Dependabot tracks dependency updates across GitHub Actions, npm, pip, Go modules, Java, and .NET packages.
+
+Checkov currently runs in audit mode with `soft_fail: true`. This keeps the portfolio workflow visible while the blueprint is still being hardened. Once the expected exceptions are documented or remediated, switch Checkov to failing mode and make it a required branch protection check.
+
+## Recommended Branch Protection
+
+For a stricter public portfolio setup, require these checks before merging to `main`:
+
+- CodeQL
+- Secret Scan
+- IaC Security
+- Workflow YAML validation
+- Helm render validation
+
+Require review for changes under:
+
+- `.github/workflows/`
+- `platform/infrastructure/`
+- `k8s/`
+- `helm/`
+- `platform/database-security/`
+
+## Future Runtime Policy
+
+Add Kyverno or Azure Policy for AKS when the cluster baseline is active:
+
+- Deny privileged containers.
+- Restrict hostPath mounts.
+- Require resource requests and limits.
+- Require tenant and app labels.
+- Allow image pulls only from approved registries.
+- Require Workload Identity for services that access Azure resources.

@@ -256,6 +256,7 @@ Scope:
 - Image build workflow
 - Helm package workflow
 - Database migration workflow placeholder/boundary
+- Security workflows for SAST, secrets, IaC, and dependency updates
 
 Checks:
 
@@ -268,10 +269,20 @@ Checks:
   ```bash
   rg -n "azure/login|id-token|AZURE_CLIENT_SECRET|password|secret" .github/workflows .github/scripts
   ```
+- [ ] Confirm security workflows exist.
+  ```bash
+  ls .github/workflows/codeql.yaml \
+    .github/workflows/secret-scan.yaml \
+    .github/workflows/iac-security.yaml \
+    .github/dependabot.yaml
+  ```
+- [ ] Run CodeQL manually from GitHub Actions after the first push.
+- [ ] Run Secret Scan manually from GitHub Actions.
+- [ ] Run IaC Security manually from GitHub Actions and review Checkov findings.
 - [ ] Run `Package Helm Charts` workflow manually.
 - [ ] Run `Build Boutique App Images` workflow manually.
 
-Expected result: CI/CD can authenticate through OIDC and push both images and Helm charts to ACR.
+Expected result: CI/CD can authenticate through OIDC, push both images and Helm charts to ACR, and surface security findings without storing static Azure credentials.
 
 ## 10. Observability And Monitoring Demo
 
