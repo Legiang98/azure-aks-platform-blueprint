@@ -271,10 +271,10 @@ Checks:
   ```
 - [ ] Confirm security workflows exist.
   ```bash
-  ls .github/workflows/codeql.yaml \
-    .github/workflows/secret-scan.yaml \
-    .github/workflows/iac-security.yaml \
-    .github/dependabot.yaml
+    ls .github/workflows/codeql.yaml \
+      .github/workflows/secret-scan.yaml \
+      .github/workflows/iac-security.yaml \
+      .github/dependabot.yaml.disable
   ```
 - [ ] Run CodeQL manually from GitHub Actions after the first push.
 - [ ] Run Secret Scan manually from GitHub Actions.

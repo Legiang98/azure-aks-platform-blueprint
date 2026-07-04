@@ -48,8 +48,8 @@ The repository uses layered security checks:
 - CodeQL scans application and SDK code for SAST findings.
 - Gitleaks scans the repository for committed secrets.
 - Checkov scans Terraform, Kubernetes, Helm, Dockerfiles, and GitHub Actions for IaC and configuration risks.
-- Workflow YAML Validation catches broken GitHub Actions and Dependabot YAML before merge.
-- Dependabot tracks dependency updates across GitHub Actions, npm, pip, Go modules, Java, and .NET packages.
+- Workflow YAML Validation catches broken GitHub Actions YAML and the disabled Dependabot scaffold before merge.
+- Dependabot is scaffolded in `.github/dependabot.yaml.disable` and intentionally disabled for this lab to avoid noisy automated PRs. Rename it to `.github/dependabot.yaml` when dependency update PRs are needed.
 
 Checkov currently runs in audit mode with `soft_fail: true`. This keeps the portfolio workflow visible while the blueprint is still being hardened. Once the expected exceptions are documented or remediated, switch Checkov to failing mode and make it a required branch protection check.
 

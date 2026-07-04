@@ -7,13 +7,13 @@ on:
       - main
     paths:
       - ".github/workflows/*.yaml"
-      - ".github/dependabot.yaml"
+      - ".github/dependabot.yaml.disable"
   pull_request:
     branches:
       - main
     paths:
       - ".github/workflows/*.yaml"
-      - ".github/dependabot.yaml"
+      - ".github/dependabot.yaml.disable"
 
 permissions:
   contents: read
@@ -28,4 +28,4 @@ jobs:
 
       - name: Parse workflow and Dependabot YAML
         run: |
-          ruby -e 'require "yaml"; ARGV.each { |p| YAML.load_stream(File.read(p)) }; puts "Validated #{ARGV.length} YAML files."' .github/workflows/*.yaml .github/dependabot.yaml
+          ruby -e 'require "yaml"; ARGV.each { |p| YAML.load_stream(File.read(p)) }; puts "Validated #{ARGV.length} YAML files."' .github/workflows/*.yaml .github/dependabot.yaml.disable
