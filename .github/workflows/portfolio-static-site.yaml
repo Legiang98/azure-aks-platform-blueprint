@@ -1,0 +1,32 @@
+name: Deploy Portfolio Static Site
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "platform/infrastructure/environments/portoflio-static-site/site/**"
+      - ".github/workflows/portfolio-static-site.yaml"
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy portfolio static site
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy to Azure Static Web Apps
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          action: upload
+          app_location: platform/infrastructure/environments/portoflio-static-site/site
+          api_location: ""
+          output_location: ""
+          skip_app_build: true

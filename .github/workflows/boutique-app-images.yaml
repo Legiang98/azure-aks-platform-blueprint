@@ -1,0 +1,113 @@
+name: Build Boutique App Images
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: Optional image tag to publish in addition to the commit SHA.
+        required: false
+        default: 0.1.0
+  push:
+    branches:
+      - main
+    paths:
+      - "apps/boutique-app/src/**"
+      - ".github/workflows/boutique-app-images.yaml"
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  IMAGE_NAMESPACE: boutique
+
+jobs:
+  build-and-push:
+    name: Build ${{ matrix.service }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        include:
+          - service: adservice
+            context: apps/boutique-app/src/adservice
+            dockerfile: apps/boutique-app/src/adservice/Dockerfile
+          - service: cartservice
+            context: apps/boutique-app/src/cartservice/src
+            dockerfile: apps/boutique-app/src/cartservice/src/Dockerfile
+          - service: checkoutservice
+            context: apps/boutique-app/src/checkoutservice
+            dockerfile: apps/boutique-app/src/checkoutservice/Dockerfile
+          - service: currencyservice
+            context: apps/boutique-app/src/currencyservice
+            dockerfile: apps/boutique-app/src/currencyservice/Dockerfile
+          - service: emailservice
+            context: apps/boutique-app/src/emailservice
+            dockerfile: apps/boutique-app/src/emailservice/Dockerfile
+          - service: frontend
+            context: apps/boutique-app/src/frontend
+            dockerfile: apps/boutique-app/src/frontend/Dockerfile
+          - service: loadgenerator
+            context: apps/boutique-app/src/loadgenerator
+            dockerfile: apps/boutique-app/src/loadgenerator/Dockerfile
+          - service: paymentservice
+            context: apps/boutique-app/src/paymentservice
+            dockerfile: apps/boutique-app/src/paymentservice/Dockerfile
+          - service: productcatalogservice
+            context: apps/boutique-app/src/productcatalogservice
+            dockerfile: apps/boutique-app/src/productcatalogservice/Dockerfile
+          - service: recommendationservice
+            context: apps/boutique-app/src/recommendationservice
+            dockerfile: apps/boutique-app/src/recommendationservice/Dockerfile
+          - service: shippingservice
+            context: apps/boutique-app/src/shippingservice
+            dockerfile: apps/boutique-app/src/shippingservice/Dockerfile
+          - service: shoppingassistantservice
+            context: apps/boutique-app/src/shoppingassistantservice
+            dockerfile: apps/boutique-app/src/shoppingassistantservice/Dockerfile
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Login to ACR
+        run: az acr login --name "${{ vars.AZURE_ACR_NAME }}"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Prepare image tags
+        id: image
+        shell: bash
+        run: |
+          image="${{ vars.AZURE_ACR_NAME }}.azurecr.io/${IMAGE_NAMESPACE}/${{ matrix.service }}"
+          {
+            echo "tags<<EOF"
+            echo "${image}:${{ github.sha }}"
+            if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ inputs.image_tag }}" ]; then
+              echo "${image}:${{ inputs.image_tag }}"
+            fi
+            if [ "${{ github.ref_name }}" = "main" ]; then
+              echo "${image}:main"
+            fi
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Build and push image
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.dockerfile }}
+          platforms: linux/amd64
+          push: true
+          tags: ${{ steps.image.outputs.tags }}
+          cache-from: type=gha,scope=${{ matrix.service }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.service }}

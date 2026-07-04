@@ -1,0 +1,50 @@
+name: Package Helm Charts
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "helm/**"
+      - ".github/workflows/helm-package.yaml"
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  CHART_PATH: helm/platform-service
+  CHART_REPOSITORY: helm
+
+jobs:
+  package-platform-service:
+    name: Package platform-service chart
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Login to ACR
+        run: az acr login --name "${{ vars.AZURE_ACR_NAME }}"
+
+      - name: Lint chart
+        run: helm lint "$CHART_PATH"
+
+      - name: Package chart
+        run: |
+          mkdir -p .artifacts/helm
+          helm package "$CHART_PATH" --destination .artifacts/helm
+
+      - name: Push chart to ACR OCI
+        run: |
+          chart_package="$(find .artifacts/helm -name '*.tgz' -type f | head -n 1)"
+          helm push "$chart_package" "oci://${{ vars.AZURE_ACR_NAME }}.azurecr.io/${CHART_REPOSITORY}"
