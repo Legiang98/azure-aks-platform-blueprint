@@ -11,6 +11,8 @@ resource "azurerm_kubernetes_cluster" "this" {
     vm_size                      = var.default_node_pool.vm_size
     vnet_subnet_id               = var.default_node_pool.vnet_subnet_id
     only_critical_addons_enabled = var.default_node_pool.only_critical_addons_enabled
+    node_labels                  = var.default_node_pool.node_labels
+    node_taints                  = var.default_node_pool.node_taints
   }
 
   network_profile {

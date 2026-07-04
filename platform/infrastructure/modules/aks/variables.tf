@@ -26,6 +26,8 @@ variable "default_node_pool" {
     vm_size                      = string
     vnet_subnet_id               = string
     only_critical_addons_enabled = optional(bool, true)
+    node_labels                  = optional(map(string), {})
+    node_taints                  = optional(list(string), [])
   })
 }
 

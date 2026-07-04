@@ -44,12 +44,35 @@ module "managed_identity" {
   for_each = try(var.platform.managed_identities, {})
   source   = "../../modules/managed-identity"
 
-  name                           = each.value.name
-  resource_group_name            = module.resource_group[each.value.resource_group_key].name
-  location                       = module.resource_group[each.value.resource_group_key].location
-  role_assignments               = try(each.value.role_assignments, {})
+  name                = each.value.name
+  resource_group_name = module.resource_group[each.value.resource_group_key].name
+  location            = module.resource_group[each.value.resource_group_key].location
+  role_assignments = merge(
+    try(each.value.role_assignments, {}),
+    each.key == "github_actions" ? {
+      acr_push = {
+        scope                = module.container_registry[try(each.value.acr_key, "platform")].id
+        role_definition_name = "AcrPush"
+      }
+    } : {}
+  )
   federated_identity_credentials = try(each.value.federated_identity_credentials, {})
   tags                           = merge(local.tags, try(each.value.tags, {}))
+}
+
+module "container_registry" {
+  for_each = try(var.platform.container_registries, {})
+  source   = "../../modules/container-registry"
+
+  name                          = each.value.name
+  resource_group_name           = module.resource_group[each.value.resource_group_key].name
+  location                      = module.resource_group[each.value.resource_group_key].location
+  sku                           = try(each.value.sku, "Basic")
+  admin_enabled                 = try(each.value.admin_enabled, false)
+  public_network_access_enabled = try(each.value.public_network_access_enabled, true)
+  pull_role_assignment_enabled  = try(each.value.pull_role_assignment_enabled, false)
+  pull_principal_id             = try(each.value.pull_principal_id, null)
+  tags                          = merge(local.tags, try(each.value.tags, {}))
 }
 
 # Disabled for the current SQL-focused baseline.
@@ -61,7 +84,6 @@ module "managed_identity" {
 # module "vnet_peering" {}
 # module "vpn_vm" {}
 # module "aks" {}
-# module "container_registry" {}
 # module "monitoring" {}
 # module "private_dns" {}
 # module "private_endpoint" {}

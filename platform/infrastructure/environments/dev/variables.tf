@@ -88,6 +88,38 @@ variable "platform" {
           purpose  = "reporting"
         }
       }
+      github_actions = {
+        name               = "id-github-actions-aks-platform"
+        resource_group_key = "platform"
+        acr_key            = "platform"
+        federated_identity_credentials = {
+          main = {
+            name     = "github-actions-main"
+            audience = ["api://AzureADTokenExchange"]
+            issuer   = "https://token.actions.githubusercontent.com"
+            subject  = "repo:Legiang98/azure-aks-platform-blueprint:ref:refs/heads/main"
+          }
+        }
+        tags = {
+          workload = "github-actions"
+          purpose  = "ci-cd-oidc"
+        }
+      }
+    }
+
+    container_registries = {
+      platform = {
+        # Must be globally unique before apply.
+        name                          = "craksplatformdemo001"
+        resource_group_key            = "platform"
+        sku                           = "Basic"
+        admin_enabled                 = false
+        public_network_access_enabled = true
+        tags = {
+          workload = "artifacts"
+          purpose  = "container-images-and-helm-oci"
+        }
+      }
     }
   }
 }

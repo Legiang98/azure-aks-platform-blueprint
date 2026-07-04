@@ -32,3 +32,18 @@ output "managed_identity_principal_ids" {
   description = "User-assigned managed identity principal IDs keyed by logical name. Use these as Pulumi app01AzureSql user objectId values."
   value       = { for key, identity in module.managed_identity : key => identity.principal_id }
 }
+
+output "github_actions_client_id" {
+  description = "Client ID of the GitHub Actions managed identity used by azure/login OIDC."
+  value       = try(module.managed_identity["github_actions"].client_id, null)
+}
+
+output "container_registry_login_servers" {
+  description = "Azure Container Registry login servers keyed by logical name."
+  value       = { for key, registry in module.container_registry : key => registry.login_server }
+}
+
+output "container_registry_names" {
+  description = "Azure Container Registry names keyed by logical name."
+  value       = { for key, registry in module.container_registry : key => registry.name }
+}

@@ -25,6 +25,12 @@ variable "admin_enabled" {
   default     = false
 }
 
+variable "public_network_access_enabled" {
+  description = "Whether public network access is enabled for the registry."
+  type        = bool
+  default     = true
+}
+
 variable "pull_role_assignment_enabled" {
   description = "Whether to create a role assignment for the pull principal ID."
   type        = bool

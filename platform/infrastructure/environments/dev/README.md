@@ -9,6 +9,8 @@ For this phase, it provisions only:
 - Azure SQL elastic pool
 - Azure SQL database
 - App managed identities for database access
+- GitHub Actions managed identity for OIDC-based CI/CD
+- Azure Container Registry for container images and Helm OCI artifacts
 
 Database users, roles, grants, and privilege management are intentionally handled by Pulumi under `platform/database-security/`. Application schema migrations are handled by the application release pipeline.
 
@@ -16,7 +18,7 @@ Terraform outputs `managed_identity_principal_ids`; copy those values into Pulum
 
 ## Deferred Modules
 
-The reusable modules for AKS, networking, VPN, monitoring, Key Vault, private endpoints, backup vault, and container registry remain in `platform/infrastructure/modules/`, but they are not instantiated from this environment right now.
+The reusable modules for AKS, networking, VPN, monitoring, Key Vault, private endpoints, and backup vault remain in `platform/infrastructure/modules/`, but they are not instantiated from this environment right now.
 
 This keeps the active Terraform plan small while the database infrastructure and Pulumi-managed database access model are being developed.
 
@@ -25,21 +27,16 @@ This keeps the active Terraform plan small while the database infrastructure and
 ```bash
 export ARM_SUBSCRIPTION_ID="<subscription-id>"
 
-terraform -chdir=platform/infrastructure/environments/platform init \
-  -backend-config="resource_group_name=<tfstate-resource-group>" \
-  -backend-config="storage_account_name=<tfstate-storage-account>" \
-  -backend-config="container_name=<tfstate-container>" \
-  -backend-config="key=platform.tfstate"
-
-terraform -chdir=platform/infrastructure/environments/platform fmt -recursive
-terraform -chdir=platform/infrastructure/environments/platform validate
-terraform -chdir=platform/infrastructure/environments/platform plan
+terraform -chdir=platform/infrastructure/environments/dev init
+terraform -chdir=platform/infrastructure/environments/dev fmt -recursive
+terraform -chdir=platform/infrastructure/environments/dev validate
+terraform -chdir=platform/infrastructure/environments/dev plan
 ```
 
-Backend values are supplied at init time so this public blueprint does not commit subscription IDs or real storage account identifiers.
+The Terraform backend block is intentionally preserved in `providers.tf`. Do not remove or rewrite it unless explicitly requested.
 
 ## Safety
 
 Do not commit real tenant IDs, subscription IDs, secrets, private domains, production IPs, kubeconfigs, or company/client-specific values.
 
-Terraform creates Azure SQL infrastructure and managed identities only. Database access and schema migration stay outside this Terraform root.
+Terraform creates Azure SQL infrastructure, managed identities, and ACR only in this active baseline. Database access and schema migration stay outside this Terraform root.
