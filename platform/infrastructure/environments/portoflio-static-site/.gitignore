@@ -1,0 +1,22 @@
+# Local Terraform/runtime artifacts for this isolated root.
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+crash.*.log
+
+# Local deploy artifacts.
+.artifacts/
+
+# Keep static HTML/CSS source in Git, but avoid accidentally committing large media.
+site/assets/images/
+site/assets/videos/
+site/assets/media/
+site/**/*.mp4
+site/**/*.mov
+site/**/*.avi
+site/**/*.mkv
+site/**/*.webm
+site/**/*.gif
+site/**/*.zip

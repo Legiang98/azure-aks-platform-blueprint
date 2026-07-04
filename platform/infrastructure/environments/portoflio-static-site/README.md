@@ -7,7 +7,9 @@ This Terraform root is isolated from the AKS platform environment. It creates on
 - Resource group: `portfolio-static-rg`
 - Azure Static Web App: Free tier by default
 
-Website source lives under `docs/site/`.
+Website source lives under this Terraform root at `site/`.
+
+Large media is intentionally not tracked from this root. Keep lightweight HTML/CSS in `site/`, but store heavy images, videos, and generated archives outside Git or in Azure Blob Storage/CDN when needed. The local `.gitignore` ignores common media folders and deploy artifacts.
 
 ## Commands
 
@@ -23,10 +25,21 @@ terraform -chdir=platform/infrastructure/environments/portoflio-static-site vali
 terraform -chdir=platform/infrastructure/environments/portoflio-static-site plan
 ```
 
-Use `docs/site` as the Static Web Apps app location in CI/CD.
+## Local Deploy
+
+After the Static Web App exists and Azure CLI is logged in, deploy the local site from this folder:
+
+```bash
+cd platform/infrastructure/environments/portoflio-static-site
+./deploy.sh
+```
+
+The script packages `site/` into `.artifacts/static-site/portfolio-static-site.zip`, reads the Static Web Apps deployment token from Azure, and deploys the current static content. The deployment token is not written to disk.
+
+Use `platform/infrastructure/environments/portoflio-static-site/site` as the Static Web Apps app location in CI/CD.
 
 ```yaml
-app_location: "docs/site"
+app_location: "platform/infrastructure/environments/portoflio-static-site/site"
 api_location: ""
 output_location: ""
 ```

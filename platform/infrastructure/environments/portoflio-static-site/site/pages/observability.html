@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Observability | AKS Platform Blueprint</title>
+    <link rel="stylesheet" href="../assets/styles.css">
+  </head>
+  <body>
+    <nav class="nav">
+      <a class="brand" href="../index.html">AKS Platform Blueprint</a>
+      <div class="nav-links">
+        <a href="./architecture.html">Architecture</a>
+        <a href="./ha-autoscaling.html">HA & Scaling</a>
+        <a href="./platform-sdk.html">SDK</a>
+        <a href="./devops-workflow.html">DevOps</a>
+        <a href="./operations.html">Operations</a>
+      </div>
+    </nav>
+    <main class="content">
+      <section>
+        <p class="eyebrow">Observability</p>
+        <h1>Application Insights, Log Analytics, and ELK examples for platform operations.</h1>
+      </section>
+      <section>
+        <h2>Application Insights KQL</h2>
+        <pre><code>requests
+| summarize count(), avg(duration) by cloud_RoleName, resultCode
+| order by count_ desc</code></pre>
+      </section>
+      <section>
+        <h2>Log Analytics KQL</h2>
+        <pre><code>ContainerLogV2
+| where TimeGenerated > ago(1h)
+| summarize count() by Namespace, PodName, LogLevel</code></pre>
+      </section>
+      <section>
+        <h2>ELK Dashboard Ideas</h2>
+        <ul>
+          <li>Tenant request rate and error rate.</li>
+          <li>Gateway 4xx and 5xx by hostname.</li>
+          <li>Container restart and eviction trend.</li>
+          <li>Spot node interruption and pending pod trend.</li>
+          <li>Application log correlation by trace ID.</li>
+        </ul>
+      </section>
+    </main>
+  </body>
+</html>

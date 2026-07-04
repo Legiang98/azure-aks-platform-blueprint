@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DevOps Workflow | AKS Platform Blueprint</title>
+    <link rel="stylesheet" href="../assets/styles.css">
+  </head>
+  <body>
+    <nav class="nav">
+      <a class="brand" href="../index.html">AKS Platform Blueprint</a>
+      <div class="nav-links">
+        <a href="./architecture.html">Architecture</a>
+        <a href="./ha-autoscaling.html">HA & Scaling</a>
+        <a href="./platform-sdk.html">SDK</a>
+        <a href="./observability.html">Observability</a>
+        <a href="./operations.html">Operations</a>
+      </div>
+    </nav>
+    <main class="content">
+      <section>
+        <p class="eyebrow">DevOps Workflow</p>
+        <h1>Separate infrastructure, platform, SDK, and application delivery.</h1>
+      </section>
+      <section>
+        <h2>Flow</h2>
+        <ul>
+          <li>Terraform provisions Azure infrastructure and the portfolio Static Web App.</li>
+          <li>Kubernetes platform manifests create tenant isolation and NAP spot node provisioning policies.</li>
+          <li>The platform SDK is built and published as a package artifact.</li>
+          <li>GitHub Actions builds boutique microservice images in parallel and pushes them to ACR.</li>
+          <li>GitHub Actions packages the reusable Helm chart and pushes it to ACR OCI.</li>
+          <li>Flux reconciles the OCI chart, app HelmReleases, and app settings ConfigMaps.</li>
+        </ul>
+      </section>
+      <section>
+        <h2>Image Workflow</h2>
+        <pre><code>acr.azurecr.io/boutique/frontend:0.1.0
+acr.azurecr.io/boutique/checkoutservice:0.1.0
+acr.azurecr.io/helm/platform-service:0.1.0</code></pre>
+      </section>
+      <section>
+        <h2>Static Web App Deploy Config</h2>
+        <pre><code>app_location: "platform/infrastructure/environments/portoflio-static-site/site"
+api_location: ""
+output_location: ""</code></pre>
+      </section>
+    </main>
+  </body>
+</html>

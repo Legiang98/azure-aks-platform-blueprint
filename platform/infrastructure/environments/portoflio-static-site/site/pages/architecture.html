@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Architecture | AKS Platform Blueprint</title>
+    <link rel="stylesheet" href="../assets/styles.css">
+  </head>
+  <body>
+    <nav class="nav">
+      <a class="brand" href="../index.html">AKS Platform Blueprint</a>
+      <div class="nav-links">
+        <a href="./ha-autoscaling.html">HA & Scaling</a>
+        <a href="./platform-sdk.html">SDK</a>
+        <a href="./devops-workflow.html">DevOps</a>
+        <a href="./observability.html">Observability</a>
+        <a href="./operations.html">Operations</a>
+      </div>
+    </nav>
+    <main class="content">
+      <section>
+        <p class="eyebrow">Architecture</p>
+        <h1>Multi-tenant AKS platform with isolated infrastructure boundaries.</h1>
+        <p>The blueprint separates Azure infrastructure, Kubernetes platform controls, app releases, database security, and platform SDK concerns.</p>
+      </section>
+      <section class="grid two">
+        <article>
+          <h2>Network</h2>
+          <ul>
+            <li>VPN VNet for WireGuard Portal and operator entry.</li>
+            <li>AKS VNet for system, app, ingress, and API server subnets.</li>
+            <li>Data VNet for private endpoints and database administration paths.</li>
+          </ul>
+        </article>
+        <article>
+          <h2>Kubernetes</h2>
+          <ul>
+            <li>Platform-owned namespaces, quotas, limit ranges, and network policies.</li>
+            <li>App-owned Helm chart and Flux HelmRelease manifests.</li>
+            <li>Shared Gateway API with namespace label-based route attachment.</li>
+            <li>On-demand baseline capacity with NAP-managed spot scale-out.</li>
+          </ul>
+        </article>
+      </section>
+      <section class="callout">
+        <h2>Capacity Layers</h2>
+        <p>
+          System workloads stay on an on-demand system node pool. Critical tenant services run on a baseline
+          on-demand user pool, while selected burst workloads opt in to spot capacity through AKS Node Auto Provisioning.
+        </p>
+      </section>
+      <section class="callout">
+        <h2>Public Edge</h2>
+        <p>
+          Azure DNS owns the public hostname, Traffic Manager provides DNS-based routing, and Gateway API routes
+          application traffic inside the cluster. Multi-region failover requires more than one independent endpoint.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>

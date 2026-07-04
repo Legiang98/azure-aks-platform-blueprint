@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Platform SDK | AKS Platform Blueprint</title>
+    <link rel="stylesheet" href="../assets/styles.css">
+  </head>
+  <body>
+    <nav class="nav">
+      <a class="brand" href="../index.html">AKS Platform Blueprint</a>
+      <div class="nav-links">
+        <a href="./architecture.html">Architecture</a>
+        <a href="./ha-autoscaling.html">HA & Scaling</a>
+        <a href="./devops-workflow.html">DevOps</a>
+        <a href="./observability.html">Observability</a>
+        <a href="./operations.html">Operations</a>
+      </div>
+    </nav>
+    <main class="content">
+      <section>
+        <p class="eyebrow">Platform SDK</p>
+        <h1>One application-facing package for common platform integrations.</h1>
+        <p>The SDK wraps Managed Identity, Key Vault secret access, and Application Insights setup behind a small developer interface.</p>
+      </section>
+      <section>
+        <h2>Usage</h2>
+        <pre><code>import { createPlatformClient } from "@aks-platform/sdk";
+
+const platform = await createPlatformClient();
+await platform.initializeTelemetry();
+
+const value = await platform.keyVault?.getRequiredSecret("app-config");</code></pre>
+      </section>
+      <section class="callout">
+        <h2>Artifact Boundary</h2>
+        <p>Publish the SDK to a private npm registry such as GitHub Packages or Azure Artifacts. Do not commit registry tokens or environment-specific cloud identifiers.</p>
+      </section>
+    </main>
+  </body>
+</html>

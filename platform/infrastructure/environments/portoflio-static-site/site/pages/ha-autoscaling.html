@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>HA & Autoscaling | AKS Platform Blueprint</title>
+    <link rel="stylesheet" href="../assets/styles.css">
+  </head>
+  <body>
+    <nav class="nav">
+      <a class="brand" href="../index.html">AKS Platform Blueprint</a>
+      <div class="nav-links">
+        <a href="./architecture.html">Architecture</a>
+        <a href="./platform-sdk.html">SDK</a>
+        <a href="./devops-workflow.html">DevOps</a>
+        <a href="./observability.html">Observability</a>
+        <a href="./operations.html">Operations</a>
+      </div>
+    </nav>
+    <main class="content">
+      <section>
+        <p class="eyebrow">HA & Autoscaling</p>
+        <h1>Three capacity layers for stable platform workloads and low-cost burst traffic.</h1>
+        <p>
+          The blueprint uses on-demand capacity for the system and critical app baseline, then lets AKS Node Auto
+          Provisioning add spot nodes for workloads that can tolerate interruption.
+        </p>
+      </section>
+
+      <section class="grid two">
+        <article>
+          <h2>Capacity Model</h2>
+          <ul>
+            <li>System node pool: on-demand, Terraform-managed, system workloads only.</li>
+            <li>Baseline user node pool: on-demand, Terraform-managed, critical tenant services.</li>
+            <li>Spot NodePool: NAP-managed capacity for burst and non-critical services.</li>
+          </ul>
+        </article>
+        <article>
+          <h2>Workload Split</h2>
+          <ul>
+            <li>Baseline: frontend, cart, checkout, payment, catalog, currency, shipping.</li>
+            <li>Spot: ad, email, recommendation, shopping assistant, load generator.</li>
+            <li>Spot workloads must opt in with node selectors and tolerations.</li>
+          </ul>
+        </article>
+      </section>
+
+      <section class="grid two">
+        <article>
+          <h2>Azure DNS</h2>
+          <ul>
+            <li>Public DNS zone owns portfolio and application hostnames.</li>
+            <li>Application records can point to Traffic Manager by CNAME.</li>
+            <li>Private DNS remains separate for data services such as Azure SQL private endpoints.</li>
+          </ul>
+        </article>
+        <article>
+          <h2>Traffic Manager</h2>
+          <ul>
+            <li>Traffic Manager provides DNS-based routing to AKS ingress endpoints.</li>
+            <li>One endpoint is a routing abstraction, not full regional HA.</li>
+            <li>Two or more independent cluster endpoints are required for real failover.</li>
+          </ul>
+        </article>
+      </section>
+
+      <section>
+        <h2>Edge Routing Flow</h2>
+        <pre><code>boutique.example.com
+  -> Azure DNS CNAME
+  -> Traffic Manager profile
+  -> AKS Gateway public endpoint
+  -> HTTPRoute
+  -> boutique frontend service</code></pre>
+      </section>
+
+      <section>
+        <h2>Scheduling Contract</h2>
+        <pre><code>nodeSelector:
+  aks-platform.azure.com/node-purpose: user
+  aks-platform.azure.com/capacity: spot
+tolerations:
+  - key: aks-platform.azure.com/capacity
+    operator: Equal
+    value: spot
+    effect: NoSchedule</code></pre>
+      </section>
+
+      <section class="grid two">
+        <article>
+          <h2>Pod Scaling</h2>
+          <ul>
+            <li>HPA scales replicas from CPU or memory signals.</li>
+            <li>Prod critical services start with at least two replicas.</li>
+            <li>PDBs preserve availability during voluntary disruption.</li>
+          </ul>
+        </article>
+        <article>
+          <h2>Node Scaling</h2>
+          <ul>
+            <li>NAP provisions spot nodes when pending pods require capacity.</li>
+            <li>Classic cluster autoscaler is not used for the NAP spot layer.</li>
+            <li>Spot interruption is expected and limited to opted-in workloads.</li>
+          </ul>
+        </article>
+      </section>
+
+      <section>
+        <h2>Validation</h2>
+        <pre><code>kubectl kustomize k8s/platform/node-provisioning
+kubectl get nodepool
+kubectl get nodes -L aks-platform.azure.com/capacity
+kubectl get hpa,pdb -A</code></pre>
+      </section>
+    </main>
+  </body>
+</html>

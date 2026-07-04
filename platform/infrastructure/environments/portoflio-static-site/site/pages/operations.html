@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Operations | AKS Platform Blueprint</title>
+    <link rel="stylesheet" href="../assets/styles.css">
+  </head>
+  <body>
+    <nav class="nav">
+      <a class="brand" href="../index.html">AKS Platform Blueprint</a>
+      <div class="nav-links">
+        <a href="./architecture.html">Architecture</a>
+        <a href="./ha-autoscaling.html">HA & Scaling</a>
+        <a href="./platform-sdk.html">SDK</a>
+        <a href="./devops-workflow.html">DevOps</a>
+        <a href="./observability.html">Observability</a>
+      </div>
+    </nav>
+    <main class="content">
+      <section>
+        <p class="eyebrow">Operations</p>
+        <h1>Recovery, validation, and runbook patterns for the platform blueprint.</h1>
+      </section>
+      <section class="grid two">
+        <article>
+          <h2>Recovery</h2>
+          <ul>
+            <li>Data Protection Backup Vault foundation for AKS backup workflows.</li>
+            <li>SQL backup posture remains Azure-managed and policy-driven.</li>
+            <li>Restore testing must be documented before claiming production readiness.</li>
+          </ul>
+        </article>
+        <article>
+          <h2>Validation</h2>
+          <ul>
+            <li>Terraform formatting and validation.</li>
+            <li>Kustomize and Helm render checks.</li>
+            <li>HPA, PDB, node placement, and NAP NodePool checks.</li>
+            <li>SDK TypeScript compile and package dry-run checks.</li>
+          </ul>
+        </article>
+      </section>
+      <section>
+        <h2>Lab Checklist</h2>
+        <ul>
+          <li>Terraform creates the SQL-focused baseline, ACR, and GitHub Actions identity.</li>
+          <li>GitHub variables are bootstrapped for OIDC-based CI/CD.</li>
+          <li>Helm chart renders all boutique services with placement and autoscaling values.</li>
+          <li>Flux reconciles tenant baselines, node provisioning policy, gateway, and app releases.</li>
+          <li>Azure DNS and Traffic Manager records are validated before exposing application hostnames.</li>
+        </ul>
+      </section>
+    </main>
+  </body>
+</html>
