@@ -1,0 +1,62 @@
+{
+  "managedBy": "Pulumi",
+  "schemaMigrationManagedBy": "CI/CD Pipeline",
+  "infrastructureManagedBy": "Terraform",
+  "notes": [
+    "Terraform manages Azure SQL infrastructure only.",
+    "Pulumi manages database users, roles, grants, and identity mappings.",
+    "Schema migrations are handled by the application release pipeline."
+  ],
+  "roles": [
+    {
+      "name": "app_readwrite",
+      "purpose": "Runtime application access",
+      "permissions": ["SELECT", "INSERT", "UPDATE", "DELETE"]
+    },
+    {
+      "name": "migration_runner",
+      "purpose": "Application schema migration",
+      "permissions": ["DDL_CHANGE", "DATA_MIGRATION"]
+    },
+    {
+      "name": "reporting_readonly",
+      "purpose": "Read-only analytics and reporting",
+      "permissions": ["SELECT"]
+    },
+    {
+      "name": "db_owner",
+      "purpose": "Emergency access only",
+      "permissions": ["ADMIN"]
+    }
+  ],
+  "principals": [
+    {
+      "name": "app-api-mi",
+      "type": "Managed Identity",
+      "role": "app_readwrite",
+      "purpose": "Runtime application access",
+      "managedBy": "Pulumi"
+    },
+    {
+      "name": "migration-runner",
+      "type": "Service Principal",
+      "role": "migration_runner",
+      "purpose": "Schema migration",
+      "managedBy": "Pulumi + Pipeline"
+    },
+    {
+      "name": "reporting-reader",
+      "type": "Entra User",
+      "role": "reporting_readonly",
+      "purpose": "Reporting",
+      "managedBy": "Pulumi"
+    },
+    {
+      "name": "breakglass-admin",
+      "type": "Admin",
+      "role": "db_owner",
+      "purpose": "Emergency only",
+      "managedBy": "Manual"
+    }
+  ]
+}

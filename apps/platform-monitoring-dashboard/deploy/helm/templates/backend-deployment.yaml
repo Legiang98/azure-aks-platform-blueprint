@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: platform-monitoring-center-api
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    app.kubernetes.io/name: platform-monitoring-center-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: platform-monitoring-center-api
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: platform-monitoring-center-api
+    spec:
+      containers:
+        - name: api
+          image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
+          imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8000
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          resources:
+            {{- toYaml .Values.backend.resources | nindent 12 }}

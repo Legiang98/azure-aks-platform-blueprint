@@ -1,0 +1,58 @@
+{
+  "version": "0.1.0-demo",
+  "environment": "platform-demo",
+  "status": "healthy",
+  "startedAt": "2026-07-03T00:00:00Z",
+  "completedAt": "2026-07-03T00:08:00Z",
+  "steps": [
+    {
+      "name": "Terraform Plan",
+      "status": "passed",
+      "startedAt": "2026-07-03T00:00:00Z",
+      "completedAt": "2026-07-03T00:01:10Z",
+      "details": "Infrastructure plan completed with no destructive changes."
+    },
+    {
+      "name": "Docker Build",
+      "status": "passed",
+      "startedAt": "2026-07-03T00:01:10Z",
+      "completedAt": "2026-07-03T00:03:00Z",
+      "details": "Backend and frontend images built."
+    },
+    {
+      "name": "Pulumi DB Access Sync",
+      "status": "synced",
+      "startedAt": "2026-07-03T00:03:00Z",
+      "completedAt": "2026-07-03T00:04:00Z",
+      "details": "Database roles and principals aligned with desired state."
+    },
+    {
+      "name": "DB Migration",
+      "status": "applied",
+      "startedAt": "2026-07-03T00:04:00Z",
+      "completedAt": "2026-07-03T00:05:00Z",
+      "details": "Application-owned migration step completed."
+    },
+    {
+      "name": "Helm Deploy",
+      "status": "deployed",
+      "startedAt": "2026-07-03T00:05:00Z",
+      "completedAt": "2026-07-03T00:07:00Z",
+      "details": "Application chart reconciled by Flux."
+    },
+    {
+      "name": "Smoke Test",
+      "status": "healthy",
+      "startedAt": "2026-07-03T00:07:00Z",
+      "completedAt": "2026-07-03T00:07:30Z",
+      "details": "Health endpoint returned healthy."
+    },
+    {
+      "name": "Monitoring Check",
+      "status": "healthy",
+      "startedAt": "2026-07-03T00:07:30Z",
+      "completedAt": "2026-07-03T00:08:00Z",
+      "details": "Metrics, logs, and traces are available."
+    }
+  ]
+}

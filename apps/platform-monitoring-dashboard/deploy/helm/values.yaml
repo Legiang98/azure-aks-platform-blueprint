@@ -1,0 +1,41 @@
+namespace:
+  create: true
+  name: platform-monitoring
+
+backend:
+  image:
+    repository: ghcr.io/example/platform-monitoring-center-api
+    tag: "0.1.0"
+    pullPolicy: IfNotPresent
+  service:
+    port: 8000
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+
+frontend:
+  image:
+    repository: ghcr.io/example/platform-monitoring-center-web
+    tag: "0.1.0"
+    pullPolicy: IfNotPresent
+  # Frontend API URL is normally same-origin through ingress. For separate
+  # hosting, pass VITE_API_BASE_URL during the frontend image build.
+  apiBaseUrl: ""
+  service:
+    port: 80
+  resources:
+    requests:
+      cpu: 25m
+      memory: 64Mi
+    limits:
+      cpu: 150m
+      memory: 128Mi
+
+ingress:
+  enabled: true
+  className: nginx
+  host: platform-monitoring.local

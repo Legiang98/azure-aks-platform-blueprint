@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: platform-monitoring-center-api
+  namespace: platform-monitoring
+  labels:
+    app.kubernetes.io/name: platform-monitoring-center-api
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: platform-monitoring-center-api
+  ports:
+    - name: http
+      port: 8000
+      targetPort: http

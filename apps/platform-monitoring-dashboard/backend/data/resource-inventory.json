@@ -1,0 +1,53 @@
+{
+  "resources": [
+    {
+      "layer": "Network",
+      "resource": "VNet / Subnets / Private DNS",
+      "status": "Provisioned",
+      "managedBy": "Terraform",
+      "purpose": "Private platform network"
+    },
+    {
+      "layer": "Compute",
+      "resource": "AKS Cluster",
+      "status": "Running",
+      "managedBy": "Terraform",
+      "purpose": "Container runtime"
+    },
+    {
+      "layer": "Database",
+      "resource": "Azure SQL",
+      "status": "Online",
+      "managedBy": "Terraform",
+      "purpose": "Application database infrastructure"
+    },
+    {
+      "layer": "Database Access",
+      "resource": "Users / Roles / Grants",
+      "status": "Synced",
+      "managedBy": "Pulumi",
+      "purpose": "Least-privilege access model"
+    },
+    {
+      "layer": "Secrets",
+      "resource": "Key Vault",
+      "status": "Active",
+      "managedBy": "Terraform",
+      "purpose": "Secret and certificate references"
+    },
+    {
+      "layer": "Delivery",
+      "resource": "GitHub Actions",
+      "status": "Passing",
+      "managedBy": "CI/CD",
+      "purpose": "Build and deployment automation"
+    },
+    {
+      "layer": "Observability",
+      "resource": "Azure Monitor / Grafana",
+      "status": "Enabled",
+      "managedBy": "Terraform",
+      "purpose": "Metrics, logs, and dashboards"
+    }
+  ]
+}

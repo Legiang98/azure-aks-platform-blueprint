@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: platform-monitoring-center-api
+  namespace: platform-monitoring
+  labels:
+    app.kubernetes.io/name: platform-monitoring-center-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: platform-monitoring-center-api
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: platform-monitoring-center-api
+    spec:
+      containers:
+        - name: api
+          image: ghcr.io/example/platform-monitoring-center-api:0.1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8000
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi

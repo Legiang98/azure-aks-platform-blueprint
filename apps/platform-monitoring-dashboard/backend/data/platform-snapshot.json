@@ -1,0 +1,44 @@
+{
+  "environment": "platform-demo",
+  "region": "example-region",
+  "platformName": "Azure AKS Platform Blueprint",
+  "lastUpdated": "2026-07-03T00:00:00Z",
+  "components": [
+    {
+      "name": "AKS Cluster",
+      "status": "healthy",
+      "managedBy": "Terraform",
+      "description": "Shared multi-tenant Kubernetes runtime"
+    },
+    {
+      "name": "Azure SQL",
+      "status": "online",
+      "managedBy": "Terraform",
+      "description": "Application database infrastructure with private endpoint"
+    },
+    {
+      "name": "Key Vault",
+      "status": "active",
+      "managedBy": "Terraform",
+      "description": "Secret and certificate reference store"
+    },
+    {
+      "name": "CI/CD",
+      "status": "passing",
+      "managedBy": "GitHub Actions",
+      "description": "Build, validation, and deployment automation"
+    },
+    {
+      "name": "Monitoring",
+      "status": "enabled",
+      "managedBy": "Terraform",
+      "description": "Log Analytics, Application Insights, and platform telemetry"
+    },
+    {
+      "name": "Database Access",
+      "status": "synced",
+      "managedBy": "Pulumi",
+      "description": "Least-privilege users, roles, and grants"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "apiHealth": "healthy",
+  "p95LatencyMs": 142,
+  "errorRate": 0.01,
+  "podReadiness": "12/12",
+  "dbConnectivity": "healthy",
+  "lastAlert": "No active alerts",
+  "metricsEnabled": true,
+  "logsEnabled": true,
+  "tracesEnabled": true
+}

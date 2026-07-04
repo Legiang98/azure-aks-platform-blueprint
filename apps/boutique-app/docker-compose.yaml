@@ -1,0 +1,60 @@
+services:
+  adservice:
+    build:
+      context: ./src/adservice
+    image: boutique-app-adservice:latest
+
+  cartservice:
+    build:
+      context: ./src/cartservice/src
+    image: boutique-app-cartservice:latest
+
+  checkoutservice:
+    build:
+      context: ./src/checkoutservice
+    image: boutique-app-checkoutservice:latest
+
+  currencyservice:
+    build:
+      context: ./src/currencyservice
+    image: boutique-app-currencyservice:latest
+
+  emailservice:
+    build:
+      context: ./src/emailservice
+    image: boutique-app-emailservice:latest
+
+  frontend:
+    build:
+      context: ./src/frontend
+    image: boutique-app-frontend:latest
+
+  loadgenerator:
+    build:
+      context: ./src/loadgenerator
+    image: boutique-app-loadgenerator:latest
+
+  paymentservice:
+    build:
+      context: ./src/paymentservice
+    image: boutique-app-paymentservice:latest
+
+  productcatalogservice:
+    build:
+      context: ./src/productcatalogservice
+    image: boutique-app-productcatalogservice:latest
+
+  recommendationservice:
+    build:
+      context: ./src/recommendationservice
+    image: boutique-app-recommendationservice:latest
+
+  shippingservice:
+    build:
+      context: ./src/shippingservice
+    image: boutique-app-shippingservice:latest
+
+  shoppingassistantservice:
+    build:
+      context: ./src/shoppingassistantservice
+    image: boutique-app-shoppingassistantservice:latest

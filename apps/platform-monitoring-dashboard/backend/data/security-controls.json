@@ -1,0 +1,40 @@
+{
+  "controls": [
+    {
+      "name": "GitHub Actions uses OIDC",
+      "status": "implemented",
+      "category": "CI/CD Identity",
+      "evidence": "Workflows use federated identity instead of static cloud credentials."
+    },
+    {
+      "name": "Workloads use Workload Identity",
+      "status": "implemented",
+      "category": "Kubernetes Identity",
+      "evidence": "Service accounts map to managed identities through OIDC federation."
+    },
+    {
+      "name": "Secrets referenced from Key Vault",
+      "status": "implemented",
+      "category": "Secrets",
+      "evidence": "Applications use Key Vault references and SDK helper patterns."
+    },
+    {
+      "name": "Database access uses least-privilege roles",
+      "status": "implemented",
+      "category": "Database",
+      "evidence": "Pulumi manages role-based access mappings."
+    },
+    {
+      "name": "Schema migration is separated from infrastructure provisioning",
+      "status": "implemented",
+      "category": "Release Governance",
+      "evidence": "Release pipeline owns schema migration after infrastructure and access sync."
+    },
+    {
+      "name": "No static cloud credentials in CI/CD",
+      "status": "implemented",
+      "category": "Credential Hygiene",
+      "evidence": "Demo workflows are designed around OIDC and managed identity."
+    }
+  ]
+}
