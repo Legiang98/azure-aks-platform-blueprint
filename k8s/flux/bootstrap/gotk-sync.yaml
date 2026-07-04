@@ -1,0 +1,26 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: platform-blueprint
+  namespace: flux-system
+spec:
+  interval: 1m
+  ref:
+    branch: main
+  # Portfolio placeholder. Replace with this repository URL during bootstrap.
+  url: "https://github.com/<owner>/<repository>.git"
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: platform-root
+  namespace: flux-system
+spec:
+  interval: 10m
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: platform-blueprint
+  path: ./k8s/flux/clusters/aks-platform
+  wait: true
+  timeout: 3m

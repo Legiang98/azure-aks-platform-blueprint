@@ -1,0 +1,37 @@
+apiVersion: karpenter.sh/v1
+kind: NodePool
+metadata:
+  name: spot-user
+spec:
+  template:
+    metadata:
+      labels:
+        aks-platform.azure.com/capacity: spot
+        aks-platform.azure.com/node-purpose: user
+    spec:
+      taints:
+        - key: aks-platform.azure.com/capacity
+          value: spot
+          effect: NoSchedule
+      requirements:
+        - key: karpenter.sh/capacity-type
+          operator: In
+          values:
+            - spot
+        - key: kubernetes.io/os
+          operator: In
+          values:
+            - linux
+        - key: kubernetes.io/arch
+          operator: In
+          values:
+            - amd64
+      # AKS NAP creates the default node class when node auto provisioning is enabled.
+      nodeClassRef:
+        name: default
+  disruption:
+    consolidationPolicy: WhenEmptyOrUnderutilized
+    consolidateAfter: 2m
+  limits:
+    cpu: "20"
+    memory: 80Gi

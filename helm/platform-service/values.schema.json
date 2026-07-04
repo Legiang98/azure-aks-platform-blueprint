@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "image",
+    "container",
+    "platform"
+  ],
+  "properties": {
+    "image": {
+      "type": "object",
+      "required": [
+        "repository",
+        "tag"
+      ],
+      "properties": {
+        "repository": {
+          "type": "string"
+        },
+        "tag": {
+          "type": "string"
+        },
+        "pullPolicy": {
+          "type": "string"
+        }
+      }
+    },
+    "platform": {
+      "type": "object",
+      "properties": {
+        "tenant": {
+          "type": "string"
+        },
+        "app": {
+          "type": "string"
+        },
+        "environment": {
+          "type": "string"
+        },
+        "keyVaultUrl": {
+          "type": "string"
+        }
+      }
+    },
+    "container": {
+      "type": "object",
+      "properties": {
+        "port": {
+          "type": "integer"
+        },
+        "env": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}

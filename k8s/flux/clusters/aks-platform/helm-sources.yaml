@@ -1,0 +1,11 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: platform-service-chart
+  namespace: flux-system
+spec:
+  interval: 10m
+  # Portfolio placeholder. Replace <acr-name> with the Terraform ACR output.
+  url: "oci://<acr-name>.azurecr.io/helm/platform-service"
+  ref:
+    semver: ">=0.1.0"

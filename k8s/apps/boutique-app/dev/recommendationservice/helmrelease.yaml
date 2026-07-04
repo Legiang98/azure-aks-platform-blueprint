@@ -1,0 +1,76 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: recommendationservice
+  namespace: tenant-boutique-dev
+spec:
+  interval: 10m
+  chartRef:
+    kind: OCIRepository
+    name: platform-service-chart
+    namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  values:
+    nameOverride: recommendationservice
+    replicaCount: 1
+    image:
+      repository: <acr-name>.azurecr.io/boutique/recommendationservice
+      tag: "0.1.0"
+      pullPolicy: IfNotPresent
+    platform:
+      tenant: boutique
+      app: boutique-app
+      environment: dev
+      keyVaultUrl: ""
+      appSettings:
+        enabled: true
+        existingConfigMap: recommendationservice-app-settings
+        mountPath: /app/config/app-settings.json
+    serviceAccount:
+      create: true
+      name: recommendationservice
+      workloadIdentity:
+        enabled: true
+        clientId: ""
+    container:
+      port: 8080
+      env: {}
+    service:
+      enabled: true
+      type: ClusterIP
+      port: 80
+    route:
+      enabled: false
+      gatewayName: shared-public
+      gatewayNamespace: gateway-system
+      hostnames:
+        - boutique-app-dev.example.com
+      pathPrefix: /
+    nodeSelector:
+      aks-platform.azure.com/node-purpose: user
+      aks-platform.azure.com/capacity: spot
+    tolerations:
+      - key: aks-platform.azure.com/capacity
+        operator: Equal
+        value: spot
+        effect: NoSchedule
+    topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: topology.kubernetes.io/zone
+        whenUnsatisfiable: ScheduleAnyway
+        labelSelector:
+          matchLabels:
+            app.kubernetes.io/instance: recommendationservice
+
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 300m
+        memory: 256Mi

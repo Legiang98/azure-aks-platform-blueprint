@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: emailservice-app-settings
+  namespace: tenant-boutique-dev
+  labels:
+    tenant: boutique
+    app: boutique-app
+    service: emailservice
+    environment: dev
+data:
+  app-settings.json: |
+    {
+      "schemaVersion": "platform.settings/v1",
+      "platform": {
+        "tenant": "boutique",
+        "app": "boutique-app",
+        "service": "emailservice",
+        "environment": "dev"
+      },
+      "keyVault": {
+        "urlEnv": "PLATFORM_KEY_VAULT_URL",
+        "secretMappings": [
+          {
+            "name": "appInsights",
+            "env": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+            "secretName": "boutique-dev-appinsights-connection-string",
+            "required": true
+          }
+        ]
+      },
+      "dependencies": {
+        "services": {
+        }
+      },
+      "features": {
+      }
+    }

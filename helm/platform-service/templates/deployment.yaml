@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "platform-service.fullname" . }}
+  labels:
+    {{- include "platform-service.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "platform-service.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "platform-service.labels" . | nindent 8 }}
+        {{- if .Values.serviceAccount.workloadIdentity.enabled }}
+        azure.workload.identity/use: "true"
+        {{- end }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      serviceAccountName: {{ include "platform-service.serviceAccountName" . }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ include "platform-service.name" . }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.container.port }}
+          env:
+            - name: PLATFORM_ENVIRONMENT
+              value: {{ .Values.platform.environment | quote }}
+            - name: PLATFORM_SERVICE_NAME
+              value: {{ include "platform-service.name" . | quote }}
+            {{- if .Values.platform.keyVaultUrl }}
+            - name: PLATFORM_KEY_VAULT_URL
+              value: {{ .Values.platform.keyVaultUrl | quote }}
+            {{- end }}
+            {{- if .Values.platform.appSettings.enabled }}
+            - name: PLATFORM_APP_SETTINGS_PATH
+              value: {{ .Values.platform.appSettings.mountPath | quote }}
+            {{- end }}
+            {{- range $name, $value := .Values.container.env }}
+            - name: {{ $name }}
+              value: {{ $value | quote }}
+            {{- end }}
+          {{- if .Values.platform.appSettings.enabled }}
+          volumeMounts:
+            - name: app-settings
+              mountPath: {{ .Values.platform.appSettings.mountPath | quote }}
+              subPath: app-settings.json
+              readOnly: true
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- if .Values.platform.appSettings.enabled }}
+      volumes:
+        - name: app-settings
+          configMap:
+            name: {{ .Values.platform.appSettings.existingConfigMap | quote }}
+      {{- end }}

@@ -1,0 +1,62 @@
+service:
+  name: loadgenerator
+
+nameOverride: loadgenerator
+
+image:
+  repository: ghcr.io/example/boutique-loadgenerator
+  tag: "0.1.0"
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+container:
+  port: 8089
+
+serviceAccount:
+  create: true
+  name: loadgenerator
+  workloadIdentity:
+    enabled: true
+    clientId: ""
+
+platform:
+  tenant: boutique
+  app: boutique-app
+  environment: dev
+  keyVaultUrl: ""
+  appSettings:
+    enabled: true
+    existingConfigMap: loadgenerator-app-settings
+    mountPath: /app/config/app-settings.json
+
+route:
+  enabled: false
+  gatewayName: shared-public
+  gatewayNamespace: gateway-system
+  hostnames:
+    - boutique-app-dev.example.com
+
+nodeSelector:
+  aks-platform.azure.com/node-purpose: user
+  aks-platform.azure.com/capacity: spot
+tolerations:
+  - key: aks-platform.azure.com/capacity
+    operator: Equal
+    value: spot
+    effect: NoSchedule
+topologySpreadConstraints:
+  - maxSkew: 1
+    topologyKey: topology.kubernetes.io/zone
+    whenUnsatisfiable: ScheduleAnyway
+    labelSelector:
+      matchLabels:
+        app.kubernetes.io/instance: loadgenerator
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 300m
+    memory: 256Mi

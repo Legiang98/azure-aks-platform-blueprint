@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-app-settings
+  namespace: tenant-boutique-prod
+  labels:
+    tenant: boutique
+    app: boutique-app
+    service: frontend
+    environment: prod
+data:
+  app-settings.json: |
+    {
+      "schemaVersion": "platform.settings/v1",
+      "platform": {
+        "tenant": "boutique",
+        "app": "boutique-app",
+        "service": "frontend",
+        "environment": "prod"
+      },
+      "keyVault": {
+        "urlEnv": "PLATFORM_KEY_VAULT_URL",
+        "secretMappings": [
+          {
+            "name": "appInsights",
+            "env": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+            "secretName": "boutique-prod-appinsights-connection-string",
+            "required": true
+          }
+        ]
+      },
+      "dependencies": {
+        "services": {
+          "cartservice": {
+            "url": "http://cartservice:7070"
+          },
+          "currencyservice": {
+            "url": "http://currencyservice:7000"
+          },
+          "productcatalogservice": {
+            "url": "http://productcatalogservice:3550"
+          },
+          "recommendationservice": {
+            "url": "http://recommendationservice:8080"
+          },
+          "shippingservice": {
+            "url": "http://shippingservice:50051"
+          }
+        }
+      },
+      "features": {
+      }
+    }

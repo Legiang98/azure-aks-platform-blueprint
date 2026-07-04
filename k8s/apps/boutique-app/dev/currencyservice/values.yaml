@@ -1,0 +1,58 @@
+service:
+  name: currencyservice
+
+nameOverride: currencyservice
+
+image:
+  repository: ghcr.io/example/boutique-currencyservice
+  tag: "0.1.0"
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+container:
+  port: 7000
+
+serviceAccount:
+  create: true
+  name: currencyservice
+  workloadIdentity:
+    enabled: true
+    clientId: ""
+
+platform:
+  tenant: boutique
+  app: boutique-app
+  environment: dev
+  keyVaultUrl: ""
+  appSettings:
+    enabled: true
+    existingConfigMap: currencyservice-app-settings
+    mountPath: /app/config/app-settings.json
+
+route:
+  enabled: false
+  gatewayName: shared-public
+  gatewayNamespace: gateway-system
+  hostnames:
+    - boutique-app-dev.example.com
+
+nodeSelector:
+  aks-platform.azure.com/node-purpose: user
+  aks-platform.azure.com/capacity: on-demand
+tolerations: []
+topologySpreadConstraints:
+  - maxSkew: 1
+    topologyKey: topology.kubernetes.io/zone
+    whenUnsatisfiable: ScheduleAnyway
+    labelSelector:
+      matchLabels:
+        app.kubernetes.io/instance: currencyservice
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 300m
+    memory: 256Mi

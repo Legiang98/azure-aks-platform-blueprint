@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tenant-boutique-prod
+  labels:
+    tenant: boutique
+    app: boutique-app
+    environment: prod
+    data-classification: internal
+    shared-gateway-access: "true"
