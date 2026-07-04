@@ -1,0 +1,105 @@
+flowchart LR
+  %% Azure AKS Platform Blueprint infrastructure architecture.
+  %% This is a public portfolio diagram: keep names generic and avoid real IDs.
+
+  user[Platform operator]
+  app_team[Application team]
+  github[GitHub repository]
+  gha[GitHub Actions]
+
+  subgraph ci["CI/CD and GitOps boundaries"]
+    github --> gha
+    github -->|Flux manifests| flux[Flux reconciliation]
+  end
+
+  subgraph tf_active["Active Terraform dev baseline"]
+    rg[Resource group]
+    acr[Azure Container Registry]
+    sql[Azure SQL logical server]
+    pool[Elastic pool]
+    db[Azure SQL database]
+    app_mi[Application managed identities]
+    gh_mi
+  end
+
+  subgraph pulumi["Pulumi database security baseline"]
+    db_roles[Database roles]
+    db_users[Entra users and identity mappings]
+    grants[Role grants and permissions]
+  end
+
+  subgraph deferred["Deferred reusable platform modules"]
+    vnet_vpn[VPN VNet]
+    vnet_aks[AKS VNet]
+    vnet_data[Data VNet]
+    pe[Private endpoints]
+    dns[Private DNS zones]
+    kv[Key Vault]
+    aks[AKS cluster]
+    nodepools[System and user node pools]
+    gateway[Gateway API and ingress]
+    monitor[Log Analytics and Application Insights]
+    backup[Backup vault]
+  end
+
+  subgraph k8s["Kubernetes platform and workloads"]
+    platform_ns[Platform controls]
+    tenants[Tenant namespaces]
+    helm[Helm releases]
+    workloads[Example workloads]
+    sdk[Platform extension SDK]
+  end
+
+  user --> github
+  app_team --> github
+
+  gha -->|OIDC federation| gh_mi
+  gha -->|Terraform plan/apply| rg
+  rg --> acr
+  rg --> sql
+  sql --> pool
+  pool --> db
+  app_mi -->|Entra authentication| db
+  gh_mi -->|AcrPush| acr
+
+  gha -->|Pulumi preview/up| pulumi
+  pulumi --> db_users
+  db_users --> db_roles
+  db_roles --> grants
+  grants --> db
+
+  vnet_vpn <-->|VNet peering| vnet_aks
+  vnet_aks <-->|VNet peering| vnet_data
+  vnet_data --> pe
+  pe --> sql
+  dns --> pe
+  vnet_vpn --> dns
+  vnet_aks --> dns
+  vnet_data --> dns
+
+  aks --> nodepools
+  aks --> platform_ns
+  aks --> tenants
+  gateway --> workloads
+  flux --> helm
+  helm --> workloads
+  workloads --> sdk
+  sdk -->|Managed Identity| kv
+  sdk -->|database access| db
+  workloads -->|pull images| acr
+
+  aks --> monitor
+  gateway --> monitor
+  workloads --> monitor
+  db --> monitor
+  backup --> db
+
+  classDef active fill:#e8f4ff,stroke:#2563eb,color:#0f172a;
+  classDef deferred fill:#fff7ed,stroke:#f97316,color:#0f172a,stroke-dasharray: 5 4;
+  classDef boundary fill:#f8fafc,stroke:#64748b,color:#0f172a;
+  classDef security fill:#ecfdf5,stroke:#16a34a,color:#0f172a;
+
+  class rg,acr,sql,pool,db,app_mi,gh_mi active;
+  class vnet_vpn,vnet_aks,vnet_data,pe,dns,kv,aks,nodepools,gateway,monitor,backup deferred;
+  class github,gha,flux,platform_ns,tenants,helm,workloads,sdk boundary;
+  class db_roles,db_users,grants security;

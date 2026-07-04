@@ -23,14 +23,141 @@ Platform teams need a clear reference pattern for designing an Azure AKS foundat
 
 The intended pattern separates Azure infrastructure, Kubernetes platform configuration, database security management, and application release responsibilities.
 
-The platform network baseline uses separate VPN, AKS, and data VNets. The data VNet hosts private endpoints, including the Azure SQL private endpoint, while private DNS links make service names resolvable from VPN, AKS, and data network paths.
+The active Terraform `dev` environment is currently a SQL-focused baseline. It provisions the resource group, Azure SQL logical server, elastic pool, database, managed identities, and Azure Container Registry. The reusable modules for AKS, networking, private endpoints, private DNS, Key Vault, monitoring, and backup remain in `platform/infrastructure/modules/` as the next expansion layer for the platform blueprint.
+
+The intended platform network pattern uses separate VPN, AKS, and data VNets. The data VNet hosts private endpoints, including the Azure SQL private endpoint, while private DNS links make service names resolvable from VPN, AKS, and data network paths.
+
+## Infrastructure Architecture
+
+The source diagram lives at `diagrams/infrastructure-architecture.mmd`.
+
+```mermaid
+flowchart LR
+  user[Platform operator]
+  app_team[Application team]
+  github[GitHub repository]
+  gha[GitHub Actions]
+
+  subgraph ci["CI/CD and GitOps boundaries"]
+    github --> gha
+    github -->|Flux manifests| flux[Flux reconciliation]
+  end
+
+  subgraph tf_active["Active Terraform dev baseline"]
+    rg[Resource group]
+    acr[Azure Container Registry]
+    sql[Azure SQL logical server]
+    pool[Elastic pool]
+    db[Azure SQL database]
+    app_mi[Application managed identities]
+    gh_mi
+  end
+
+  subgraph pulumi["Pulumi database security baseline"]
+    db_roles[Database roles]
+    db_users[Entra users and identity mappings]
+    grants[Role grants and permissions]
+  end
+
+  subgraph deferred["Deferred reusable platform modules"]
+    vnet_vpn[VPN VNet]
+    vnet_aks[AKS VNet]
+    vnet_data[Data VNet]
+    pe[Private endpoints]
+    dns[Private DNS zones]
+    kv[Key Vault]
+    aks[AKS cluster]
+    nodepools[System and user node pools]
+    gateway[Gateway API and ingress]
+    monitor[Log Analytics and Application Insights]
+    backup[Backup vault]
+  end
+
+  subgraph k8s["Kubernetes platform and workloads"]
+    platform_ns[Platform controls]
+    tenants[Tenant namespaces]
+    helm[Helm releases]
+    workloads[Example workloads]
+    sdk[Platform extension SDK]
+  end
+
+  user --> github
+  app_team --> github
+
+  gha -->|OIDC federation| gh_mi
+  gha -->|Terraform plan/apply| rg
+  rg --> acr
+  rg --> sql
+  sql --> pool
+  pool --> db
+  app_mi -->|Entra authentication| db
+  gh_mi -->|AcrPush| acr
+
+  gha -->|Pulumi preview/up| pulumi
+  pulumi --> db_users
+  db_users --> db_roles
+  db_roles --> grants
+  grants --> db
+
+  vnet_vpn <-->|VNet peering| vnet_aks
+  vnet_aks <-->|VNet peering| vnet_data
+  vnet_data --> pe
+  pe --> sql
+  dns --> pe
+  vnet_vpn --> dns
+  vnet_aks --> dns
+  vnet_data --> dns
+
+  aks --> nodepools
+  aks --> platform_ns
+  aks --> tenants
+  gateway --> workloads
+  flux --> helm
+  helm --> workloads
+  workloads --> sdk
+  sdk -->|Managed Identity| kv
+  sdk -->|database access| db
+  workloads -->|pull images| acr
+
+  aks --> monitor
+  gateway --> monitor
+  workloads --> monitor
+  db --> monitor
+  backup --> db
+
+  classDef active fill:#e8f4ff,stroke:#2563eb,color:#0f172a;
+  classDef deferred fill:#fff7ed,stroke:#f97316,color:#0f172a,stroke-dasharray: 5 4;
+  classDef boundary fill:#f8fafc,stroke:#64748b,color:#0f172a;
+  classDef security fill:#ecfdf5,stroke:#16a34a,color:#0f172a;
+
+  class rg,acr,sql,pool,db,app_mi,gh_mi active;
+  class vnet_vpn,vnet_aks,vnet_data,pe,dns,kv,aks,nodepools,gateway,monitor,backup deferred;
+  class github,gha,flux,platform_ns,tenants,helm,workloads,sdk boundary;
+  class db_roles,db_users,grants security;
+```
+
+## Architecture Layers
+
+- **Active Terraform baseline:** Provisions Azure SQL infrastructure, managed identities, and ACR from `platform/infrastructure/environments/dev/`.
+- **Deferred platform modules:** Keep the reusable AKS, networking, private endpoint, private DNS, Key Vault, monitoring, and backup module implementations ready for later environment composition.
+- **Database security baseline:** Uses Pulumi under `platform/database-security/` to manage Entra users, role-oriented permissions, and database grants separately from Terraform.
+- **Kubernetes and GitOps layer:** Keeps platform controls, tenant manifests, Gateway API resources, and Flux-managed application releases under `k8s/`.
+- **Application integration layer:** Uses the platform extension SDK as a thin boundary for Managed Identity, Key Vault, database access, and telemetry wiring.
+
+## Deployment Boundaries
+
+- Terraform owns cloud infrastructure resources and managed identities.
+- Pulumi owns database users, roles, grants, and identity mappings.
+- Flux and Helm own Kubernetes application release state.
+- Application pipelines own schema migrations and workload release logic.
+- Documentation and diagrams describe the blueprint pattern and must be updated when these boundaries change.
 
 ## Components
 
 - Azure resource groups, networking, AKS, Key Vault, Azure SQL server, elastic pool, databases, private endpoints, private DNS, backup vault, and monitoring live under `platform/infrastructure/`.
-- Terraform infrastructure is organized around one shared `platform` environment for the multi-tenant AKS baseline.
+- Terraform infrastructure is currently organized around the SQL-focused `dev` environment, with reusable modules kept ready for later AKS environment composition.
 - Database users, roles, grants, identity mappings, and connection references live under `platform/database-security/`.
-- Application-facing platform SDK packages live under `platform/sdk/`.
+- Application-facing platform SDK packages live under `platform/extension-sdk/`.
 - Kubernetes platform controls live under `k8s/platform/`.
 - Application Helm charts and Flux release manifests live under `k8s/apps/`.
 - Portfolio website content lives under `platform/infrastructure/environments/portoflio-static-site/site/`.
@@ -47,7 +174,7 @@ The platform network baseline uses separate VPN, AKS, and data VNets. The data V
 
 ## Observability
 
-The blueprint should include diagnostic settings, platform metrics, logs, alerts, and dashboard references as implementation matures.
+The blueprint should include diagnostic settings, platform metrics, logs, alerts, and dashboard references as implementation matures. The reusable monitoring module currently models Log Analytics and Application Insights. Future AKS composition should connect AKS, ingress, workloads, and database diagnostics into that monitoring layer.
 
 ## Deployment Flow
 
@@ -70,7 +197,7 @@ Rollback plans should distinguish between infrastructure replacement, Kubernetes
 
 ## Future Improvements
 
-- Add reusable Terraform modules.
-- Add Pulumi database security examples.
-- Add diagrams.
-- Add CI validation for formatting, security checks, and documentation consistency.
+- Instantiate the deferred AKS, networking, private endpoint, private DNS, Key Vault, monitoring, and backup modules from an environment root.
+- Expand Pulumi database security examples.
+- Add rendered SVG or PNG exports for portfolio presentation pages.
+- Add CI validation for diagram syntax and documentation consistency.

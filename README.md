@@ -137,6 +137,6 @@ This repository is a portfolio/demo blueprint for learning and reference purpose
 - Continue expanding reusable Terraform modules.
 - Add Pulumi database security examples.
 - Add CI validation workflows.
-- Add architecture diagrams.
+- Expand architecture diagrams and add rendered portfolio exports.
 - Add observability dashboards and alert examples.
 - Add more complete tenant onboarding examples.
