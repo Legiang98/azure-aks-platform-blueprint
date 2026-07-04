@@ -1,0 +1,11 @@
+helm upgrade eg oci://docker.io/envoyproxy/gateway-helm \
+    --version v1.8.1 \
+    -n envoy-gateway-system \
+    --skip-crds \
+    --set deployment.priorityClassName=system-cluster-critical \
+    --set deployment.pod.tolerations[0].key=CriticalAddonsOnly \
+    --set deployment.pod.tolerations[0].operator=Exists \
+    --set deployment.pod.tolerations[0].effect=NoSchedule \
+    --set certgen.job.tolerations[0].key=CriticalAddonsOnly \
+    --set certgen.job.tolerations[0].operator=Exists \
+    --set certgen.job.tolerations[0].effect=NoSchedule

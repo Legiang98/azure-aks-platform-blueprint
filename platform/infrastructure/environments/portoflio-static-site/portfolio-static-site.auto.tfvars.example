@@ -1,0 +1,15 @@
+resource_group_name = "portfolio-static-rg"
+location            = "Southeast Asia"
+
+# Must be globally unique before apply.
+static_web_app_name     = "swa-aks-platform-portfolio"
+static_web_app_location = "East Asia"
+static_web_app_sku_tier = "Free"
+static_web_app_sku_size = "Free"
+
+tags = {
+  scope      = "portfolio-site"
+  project    = "azure-aks-platform-blueprint"
+  purpose    = "portfolio-demo"
+  managed_by = "terraform"
+}

@@ -1,0 +1,33 @@
+{
+  "name": "@aks-platform/sdk",
+  "version": "0.1.0",
+  "description": "Node.js platform SDK for the Azure AKS platform blueprint.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "package.json"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "check": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@azure/identity": "^4.5.0",
+    "@azure/keyvault-secrets": "^4.9.0",
+    "applicationinsights": "^3.7.0",
+    "mssql": "^11.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.0"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT"
+}

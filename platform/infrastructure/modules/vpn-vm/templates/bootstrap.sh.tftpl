@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+exec > >(tee -a /var/log/vpn-bootstrap.log)
+exec 2>&1
+
+apt-get update
+apt-get install -y \
+  ca-certificates \
+  curl \
+  gnupg \
+  iproute2 \
+  iptables-persistent \
+  python3 \
+  python3-apt \
+  resolvconf \
+  wireguard-tools
+
+sysctl -w net.ipv4.ip_forward=1
+printf "net.ipv4.ip_forward=1\n" >/etc/sysctl.d/99-wireguard-forwarding.conf
+
+echo "VPN VM bootstrap complete. Run Ansible to install WireGuard Portal."

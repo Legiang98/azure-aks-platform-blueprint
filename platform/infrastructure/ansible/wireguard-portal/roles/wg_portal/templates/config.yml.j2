@@ -1,0 +1,12 @@
+# Minimal wg-portal configuration placeholder.
+# Review the wg-portal release documentation before using this beyond a demo.
+#
+# Keep secrets out of git. Override this template with Ansible Vault,
+# a private inventory, or a secure external secret source when needed.
+
+web:
+  listeningAddress: "{{ wg_portal_listen_address }}"
+  externalUrl: "{{ wg_portal_external_url }}"
+
+wireguard:
+  defaultDeviceName: "{{ wg_portal_wireguard_interface }}"

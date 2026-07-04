@@ -1,0 +1,12 @@
+---
+- name: Install WireGuard Portal
+  hosts: wireguard_servers
+  become: true
+
+  vars:
+    caddy_enabled: false
+
+  roles:
+    - role: wg_portal
+    - role: caddy
+      when: caddy_enabled | bool

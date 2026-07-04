@@ -1,0 +1,19 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    environment: "local-minikube"
+
+scrape_configs:
+  # Scrape OTel Collector's Prometheus exporter.
+  # This receives all metrics pushed by auto-instrumented microservices
+  # (Online Boutique) via OTLP → OTel Collector → prometheus exporter.
+  - job_name: otel-collector
+    static_configs:
+      - targets: ["otel-collector:8889"]
+    metrics_path: /metrics
+
+  # Self-monitoring: scrape Prometheus itself.
+  - job_name: prometheus
+    static_configs:
+      - targets: ["localhost:9090"]

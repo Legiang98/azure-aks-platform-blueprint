@@ -1,0 +1,10 @@
+{{ caddy_domain }} {
+    reverse_proxy 127.0.0.1:{{ wg_portal_port }}
+
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains"
+        X-Frame-Options "SAMEORIGIN"
+        X-Content-Type-Options "nosniff"
+        Referrer-Policy "strict-origin-when-cross-origin"
+    }
+}

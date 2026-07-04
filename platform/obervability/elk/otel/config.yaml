@@ -1,0 +1,64 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+exporters:
+  # debug:
+  #   verbosity: detailed
+  otlphttp/logstash:
+    logs_endpoint: http://logstash:8080/v1/logs
+    metrics_endpoint: http://logstash:8080/v1/metrics
+    traces_endpoint: http://logstash:8080/v1/traces
+    encoding: json
+    tls:
+      insecure: true
+
+  otlphttp/apm:
+    endpoint: http://apm-server:8200
+    tls:
+      insecure: true
+
+  # Expose OTel metrics as a Prometheus scrape endpoint.
+  # Prometheus scrapes this on port 8889.
+  prometheus:
+    endpoint: "0.0.0.0:8889"
+    namespace: otel
+    send_timestamps: true
+    metric_expiration: 5m
+    enable_open_metrics: true
+
+processors:
+  batch:
+  filter/healthcheck:
+    error_mode: ignore
+    traces:
+      span:
+        - 'name == "grpc.health.v1.Health/Check"'
+        - 'name == "/grpc.health.v1.Health/Check"'
+        - 'name == "grpc.grpc.health.v1.Health/Check"'
+        - 'attributes["http.target"] == "/healthz"'
+        - 'attributes["http.target"] == "/_healthz"'
+        - 'attributes["http.target"] == "/health"'
+
+service:
+  pipelines:
+    logs:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [otlphttp/logstash]
+
+    traces:
+      receivers: [otlp]
+      processors: [filter/healthcheck, batch]
+      exporters: [otlphttp/apm]
+
+    # Metrics pipeline: receives OTel metrics from auto-instrumented services,
+    # exposes them as a Prometheus scrape endpoint on :8889.
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [prometheus]

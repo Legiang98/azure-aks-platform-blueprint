@@ -1,0 +1,14 @@
+name: aks-platform-database-security
+description: Database access and security baseline for the AKS platform blueprint.
+runtime:
+  name: nodejs
+  options:
+    packagemanager: npm
+backend:
+  url: azblob://pulumi-store?storage_account=giangletfstate01
+  # container: database-security
+config:
+  pulumi:tags:
+    value:
+      project: azure-aks-platform-blueprint
+      purpose: portfolio-demo

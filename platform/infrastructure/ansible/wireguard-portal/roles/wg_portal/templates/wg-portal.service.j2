@@ -1,0 +1,19 @@
+[Unit]
+Description=WireGuard Portal
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User={{ wg_portal_user }}
+Group={{ wg_portal_group }}
+WorkingDirectory={{ wg_portal_dir }}
+ExecStart={{ wg_portal_dir }}/wg-portal --config {{ wg_portal_config_dir }}/config.yml
+Restart=always
+RestartSec=10
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_RAW
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_RAW
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

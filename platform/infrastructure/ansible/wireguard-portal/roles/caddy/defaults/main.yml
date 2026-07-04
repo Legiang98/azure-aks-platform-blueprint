@@ -1,0 +1,4 @@
+---
+caddy_enabled: false
+caddy_domain: "vpn.example.com"
+wg_portal_port: 8888

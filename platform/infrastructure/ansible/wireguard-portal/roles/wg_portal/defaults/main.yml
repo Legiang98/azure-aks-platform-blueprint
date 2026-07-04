@@ -1,0 +1,11 @@
+---
+wg_portal_version: "v2.1.1"
+wg_portal_user: "wg-portal"
+wg_portal_group: "wg-portal"
+wg_portal_dir: "/opt/wg-portal"
+wg_portal_config_dir: "/opt/wg-portal/config"
+wg_portal_listen_address: "127.0.0.1:8888"
+wg_portal_external_url: "https://vpn.example.com"
+wg_portal_wireguard_network: "10.11.12.0/24"
+wg_portal_wireguard_interface: "wg0"
+wg_portal_primary_interface: "eth0"

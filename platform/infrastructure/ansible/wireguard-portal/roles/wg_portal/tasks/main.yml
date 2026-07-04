@@ -1,0 +1,114 @@
+---
+- name: Install WireGuard Portal dependencies
+  ansible.builtin.apt:
+    name:
+      - ca-certificates
+      - curl
+      - iproute2
+      - iptables-persistent
+      - libcap2-bin
+      - resolvconf
+      - wireguard-tools
+    state: present
+    update_cache: true
+
+- name: Enable IPv4 forwarding
+  ansible.builtin.sysctl:
+    name: net.ipv4.ip_forward
+    value: "1"
+    sysctl_set: true
+    state: present
+    reload: true
+
+- name: Allow forwarding from WireGuard clients
+  ansible.builtin.iptables:
+    chain: FORWARD
+    in_interface: "{{ wg_portal_wireguard_interface }}"
+    jump: ACCEPT
+    comment: "Allow VPN clients to access platform networks"
+
+- name: Allow return traffic to WireGuard clients
+  ansible.builtin.iptables:
+    chain: FORWARD
+    out_interface: "{{ wg_portal_wireguard_interface }}"
+    jump: ACCEPT
+    comment: "Allow return traffic to VPN clients"
+
+- name: NAT VPN client traffic through VM primary interface
+  ansible.builtin.iptables:
+    table: nat
+    chain: POSTROUTING
+    source: "{{ wg_portal_wireguard_network }}"
+    out_interface: "{{ wg_portal_primary_interface }}"
+    jump: MASQUERADE
+    comment: "NAT VPN client traffic"
+
+- name: Save iptables rules
+  ansible.builtin.command: netfilter-persistent save
+  changed_when: false
+  failed_when: false
+
+- name: Create wg-portal group
+  ansible.builtin.group:
+    name: "{{ wg_portal_group }}"
+    system: true
+    state: present
+
+- name: Create wg-portal user
+  ansible.builtin.user:
+    name: "{{ wg_portal_user }}"
+    group: "{{ wg_portal_group }}"
+    system: true
+    shell: /usr/sbin/nologin
+    home: "{{ wg_portal_dir }}"
+    create_home: false
+
+- name: Create wg-portal directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ wg_portal_user }}"
+    group: "{{ wg_portal_group }}"
+    mode: "0755"
+  loop:
+    - "{{ wg_portal_dir }}"
+    - "{{ wg_portal_config_dir }}"
+
+- name: Download wg-portal binary
+  ansible.builtin.get_url:
+    url: "https://github.com/h44z/wg-portal/releases/download/{{ wg_portal_version }}/wg-portal_linux_amd64"
+    dest: "{{ wg_portal_dir }}/wg-portal"
+    owner: "{{ wg_portal_user }}"
+    group: "{{ wg_portal_group }}"
+    mode: "0755"
+
+- name: Set Linux capabilities on wg-portal binary
+  ansible.builtin.command: "setcap 'cap_net_admin,cap_net_raw+eip' {{ wg_portal_dir }}/wg-portal"
+  changed_when: false
+
+- name: Render wg-portal config placeholder
+  ansible.builtin.template:
+    src: config.yml.j2
+    dest: "{{ wg_portal_config_dir }}/config.yml"
+    owner: "{{ wg_portal_user }}"
+    group: "{{ wg_portal_group }}"
+    mode: "0600"
+  notify: restart wg-portal
+
+- name: Deploy wg-portal systemd service
+  ansible.builtin.template:
+    src: wg-portal.service.j2
+    dest: /etc/systemd/system/wg-portal.service
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - reload systemd
+    - restart wg-portal
+
+- name: Enable and start wg-portal
+  ansible.builtin.systemd:
+    name: wg-portal
+    enabled: true
+    state: started
+    daemon_reload: true

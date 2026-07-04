@@ -1,0 +1,29 @@
+config:
+  aks-platform-database-security:databases:
+    azureSql: {}
+    postgresql: {}
+  aks-platform-database-security:app01AzureSql:
+    host: sql-aks-platform.database.windows.net
+    database: sqldb-platform-app
+    terraformState:
+      storageAccountName: giangletfstate01
+      containerName: iacstate
+      key: platform.tfstate
+    runtimeUser:
+      username: app01-runtime-mi
+      terraformIdentityKey: app01_runtime
+      canRead: true
+      canWrite: true
+      canExecute: true
+    migrationUser:
+      username: app01-migration-mi
+      terraformIdentityKey: app01_migration
+      canRead: true
+      canWrite: true
+      canAdmin: true
+      canExecute: true
+    reportingUser:
+      username: app01-reporting-reader
+      terraformIdentityKey: app01_reporting
+      canRead: true
+encryptionsalt: v1:6TI8FiaTvkI=:v1:1VMiTzQ3g4uHE51r:HHAQs9KbD+0hVIsCfl6fYwDUcisiFA==
