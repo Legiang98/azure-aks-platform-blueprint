@@ -14,7 +14,7 @@ type Config struct {
 func ConfigFromEnv() Config {
 	return Config{
 		Environment:                         env("PLATFORM_ENVIRONMENT", "local"),
-		ServiceName:                         firstEnv("OTEL_SERVICE_NAME", "PLATFORM_SERVICE_NAME", "app"),
+		ServiceName:                         firstEnv("PLATFORM_SERVICE_NAME", "APPLICATIONINSIGHTS_ROLE_NAME", "app"),
 		KeyVaultURL:                         os.Getenv("PLATFORM_KEY_VAULT_URL"),
 		ApplicationInsightsConnectionString: firstEnv("APPLICATIONINSIGHTS_CONNECTION_STRING", "APPLICATION_INSIGHTS_CONNECTION_STRING", ""),
 		SQLServerHost:                       os.Getenv("PLATFORM_SQL_SERVER_HOST"),

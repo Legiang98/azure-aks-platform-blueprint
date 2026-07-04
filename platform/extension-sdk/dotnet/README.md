@@ -6,7 +6,7 @@ It wraps:
 
 - Default Azure credential setup
 - Key Vault secret access
-- Application Insights / Azure Monitor setup
+- Application Insights setup
 - Azure SQL Database connection strings using Microsoft Entra authentication
 
 ## Environment Variables
@@ -28,6 +28,9 @@ using AksPlatform.Sdk;
 var platform = PlatformClient.Create();
 
 platform.InitializeTelemetry();
+
+// In ASP.NET Core, prefer registering the native Application Insights SDK:
+// builder.Services.AddPlatformApplicationInsights(platform.Config);
 
 var secret = platform.KeyVault is not null
     ? await platform.KeyVault.GetRequiredSecretAsync("app01-api-key")

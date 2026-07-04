@@ -2,9 +2,9 @@ module github.com/aks-platform/extension-sdk-go
 
 go 1.22
 
+require github.com/microsoft/ApplicationInsights-Go v0.4.4
+
 require (
-	github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.8.0
-	github.com/Azure/azure-sdk-for-go/sdk/keyvault/azsecrets v1.2.0
-	github.com/microsoft/ApplicationInsights-Go/appinsights v0.4.4
-	github.com/microsoft/go-mssqldb v1.7.2
+	code.cloudfoundry.org/clock v0.0.0-20180518195852-02e53af36e6c // indirect
+	github.com/gofrs/uuid v3.3.0+incompatible // indirect
 )

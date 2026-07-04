@@ -21,8 +21,8 @@ def create_platform_config_from_env(**overrides: str | None) -> PlatformConfig:
     return PlatformConfig(
         environment=overrides.get("environment") or _env("PLATFORM_ENVIRONMENT") or "local",
         service_name=overrides.get("service_name")
-        or _env("OTEL_SERVICE_NAME")
         or _env("PLATFORM_SERVICE_NAME")
+        or _env("APPLICATIONINSIGHTS_ROLE_NAME")
         or "app",
         key_vault_url=overrides.get("key_vault_url") or _env("PLATFORM_KEY_VAULT_URL"),
         application_insights_connection_string=overrides.get("application_insights_connection_string")

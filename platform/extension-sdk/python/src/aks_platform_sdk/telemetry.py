@@ -1,23 +1,34 @@
 import json
 import os
 from dataclasses import dataclass
+from typing import Any
 
 
-@dataclass(frozen=True)
+@dataclass
 class PlatformTelemetryClient:
     enabled: bool
     service_name: str
+    _client: Any | None = None
 
     def track_event(self, name: str, properties: dict[str, str] | None = None) -> None:
         if not self.enabled:
+            return
+
+        event_properties = {"serviceName": self.service_name, **(properties or {})}
+        if self._client:
+            self._client.track_event(name, event_properties)
             return
 
         print(json.dumps({
             "type": "platform.telemetry.event",
             "serviceName": self.service_name,
             "name": name,
-            "properties": properties or {},
+            "properties": event_properties,
         }))
+
+    def flush(self) -> None:
+        if self._client:
+            self._client.flush()
 
 
 def configure_platform_telemetry(
@@ -29,9 +40,24 @@ def configure_platform_telemetry(
         return PlatformTelemetryClient(enabled=False, service_name=service_name)
 
     os.environ["APPLICATIONINSIGHTS_CONNECTION_STRING"] = connection_string
-    os.environ["OTEL_SERVICE_NAME"] = service_name
+    os.environ["APPLICATIONINSIGHTS_ROLE_NAME"] = service_name
 
-    from azure.monitor.opentelemetry import configure_azure_monitor
+    instrumentation_key = _read_instrumentation_key(connection_string)
+    if not instrumentation_key:
+        return PlatformTelemetryClient(enabled=False, service_name=service_name)
 
-    configure_azure_monitor(connection_string=connection_string)
-    return PlatformTelemetryClient(enabled=True, service_name=service_name)
+    from applicationinsights import TelemetryClient
+
+    return PlatformTelemetryClient(
+        enabled=True,
+        service_name=service_name,
+        _client=TelemetryClient(instrumentation_key),
+    )
+
+
+def _read_instrumentation_key(connection_string: str) -> str | None:
+    for part in connection_string.split(";"):
+        key, _, value = part.partition("=")
+        if key.strip().lower() == "instrumentationkey" and value.strip():
+            return value.strip()
+    return None

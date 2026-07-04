@@ -5,7 +5,7 @@
 It wraps:
 
 - Key Vault secret access
-- Application Insights / Azure Monitor setup
+- Application Insights event tracking
 - Azure SQL Database connections with Microsoft Entra authentication
 
 ## Environment Variables
