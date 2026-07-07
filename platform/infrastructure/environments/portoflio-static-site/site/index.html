@@ -23,19 +23,37 @@
         <p class="eyebrow">Azure-first platform engineering portfolio</p>
         <h1>Reusable AKS platform blueprint for secure multi-tenant workloads.</h1>
         <p class="hero-copy">
-          A public reference pattern covering Terraform infrastructure, Kubernetes tenant isolation, Flux and Helm delivery,
-          database security, platform SDK usage, autoscaling, observability, and recovery foundations.
+          A public reference pattern covering multi-region Azure networking, private DNS, Azure SQL DR planning,
+          Kubernetes tenant isolation, Flux and Helm delivery, database security, autoscaling, observability, and recovery foundations.
         </p>
       </section>
     </header>
 
     <main>
+      <section class="section">
+        <div class="media-feature">
+          <div>
+            <p class="eyebrow">Portfolio diagrams</p>
+            <h2>Azure platform and AKS workload views for interview-ready discussion.</h2>
+            <p>
+              The architecture set separates cloud infrastructure, data recovery, and Kubernetes runtime concerns so the blueprint
+              can be explained from both platform and tenant workload perspectives.
+            </p>
+            <a class="text-link" href="./pages/architecture.html">Review architecture views</a>
+          </div>
+          <figure class="image-frame">
+            <img src="./images/azure-architecture.drawio.png" alt="Multi-region Azure AKS networking and database disaster recovery architecture">
+            <figcaption>Multi-region AKS networking, private DNS, and Azure SQL disaster recovery view.</figcaption>
+          </figure>
+        </div>
+      </section>
+
       <section class="section grid two">
         <article>
           <h2>Platform Shape</h2>
           <p>
-            The platform uses separated VPN, AKS, and data VNets, private endpoints for data services, a shared Gateway API
-            entry point, Kubernetes namespace-level tenant isolation, and split on-demand/spot capacity.
+            The platform uses a shared VPN VNet with regional AKS and data VNets, private endpoint resolution through Private DNS,
+            a shared Gateway API entry point, Kubernetes namespace-level tenant isolation, and split on-demand/spot capacity.
           </p>
           <a class="text-link" href="./pages/architecture.html">View architecture</a>
         </article>
@@ -52,23 +70,28 @@
       <section class="section">
         <h2>Blueprint Areas</h2>
         <div class="card-grid">
-          <a class="card" href="./pages/ha-autoscaling.html">
+          <a class="card" href="./pages/architecture.html">
             <span>01</span>
+            <strong>Architecture Views</strong>
+            <p>Multi-region networking, SQL DR, private DNS coverage, and AKS tenant workload runtime boundaries.</p>
+          </a>
+          <a class="card" href="./pages/ha-autoscaling.html">
+            <span>02</span>
             <strong>HA & Autoscaling</strong>
             <p>System on-demand pool, baseline user pool, NAP-managed spot capacity, HPA, PDB, DNS, and Traffic Manager.</p>
           </a>
           <a class="card" href="./pages/devops-workflow.html">
-            <span>02</span>
+            <span>03</span>
             <strong>DevOps Workflow</strong>
             <p>Terraform, Flux, Helm OCI, ACR image publishing, SDK package boundaries, and app release workflows.</p>
           </a>
           <a class="card" href="./pages/observability.html">
-            <span>03</span>
+            <span>04</span>
             <strong>Observability</strong>
             <p>Application Insights KQL, Log Analytics queries, and ELK dashboard examples.</p>
           </a>
           <a class="card" href="./pages/operations.html">
-            <span>04</span>
+            <span>05</span>
             <strong>Operations</strong>
             <p>Backup vault, runbooks, validation, restore testing, and production hardening notes.</p>
           </a>
