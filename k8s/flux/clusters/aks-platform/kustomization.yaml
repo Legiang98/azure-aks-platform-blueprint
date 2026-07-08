@@ -6,6 +6,5 @@ resources:
   # Re-enable these when returning to the full portfolio reconciliation graph.
   # - monitoring-dashboard.yaml
   # - node-provisioning.yaml
-  - gateway.yaml
   - tenants.yaml
   - apps.yaml

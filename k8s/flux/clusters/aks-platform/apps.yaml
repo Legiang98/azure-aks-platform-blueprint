@@ -11,7 +11,6 @@ spec:
     name: platform-blueprint
   path: ./k8s/apps/boutique-app/dev/frontend
   dependsOn:
-    - name: gateway
     - name: tenant-boutique-dev
   wait: true
   timeout: 3m
@@ -29,7 +28,6 @@ spec:
     name: platform-blueprint
   path: ./k8s/apps/boutique-app/dev/cartservice
   dependsOn:
-    - name: gateway
     - name: tenant-boutique-dev
   wait: true
   timeout: 3m
@@ -47,7 +45,6 @@ spec:
     name: platform-blueprint
   path: ./k8s/apps/boutique-app/dev/checkoutservice
   dependsOn:
-    - name: gateway
     - name: tenant-boutique-dev
   wait: true
   timeout: 3m
@@ -65,7 +62,6 @@ spec:
     name: platform-blueprint
   path: ./k8s/apps/boutique-app/dev/currencyservice
   dependsOn:
-    - name: gateway
     - name: tenant-boutique-dev
   wait: true
   timeout: 3m
@@ -83,7 +79,6 @@ spec:
     name: platform-blueprint
   path: ./k8s/apps/boutique-app/dev/emailservice
   dependsOn:
-    - name: gateway
     - name: tenant-boutique-dev
   wait: true
   timeout: 3m
@@ -101,7 +96,6 @@ spec:
     name: platform-blueprint
   path: ./k8s/apps/boutique-app/dev/paymentservice
   dependsOn:
-    - name: gateway
     - name: tenant-boutique-dev
   wait: true
   timeout: 3m
@@ -119,7 +113,6 @@ spec:
     name: platform-blueprint
   path: ./k8s/apps/boutique-app/dev/productcatalogservice
   dependsOn:
-    - name: gateway
     - name: tenant-boutique-dev
   wait: true
   timeout: 3m
@@ -137,7 +130,6 @@ spec:
     name: platform-blueprint
   path: ./k8s/apps/boutique-app/dev/recommendationservice
   dependsOn:
-    - name: gateway
     - name: tenant-boutique-dev
   wait: true
   timeout: 3m
@@ -155,7 +147,6 @@ spec:
     name: platform-blueprint
   path: ./k8s/apps/boutique-app/dev/shippingservice
   dependsOn:
-    - name: gateway
     - name: tenant-boutique-dev
   wait: true
   timeout: 3m
@@ -173,7 +164,6 @@ spec:
     name: platform-blueprint
   path: ./k8s/apps/boutique-app/dev/adservice
   dependsOn:
-    - name: gateway
     - name: tenant-boutique-dev
   wait: true
   timeout: 3m
@@ -191,7 +181,6 @@ spec:
     name: platform-blueprint
   path: ./k8s/apps/boutique-app/dev/shoppingassistantservice
   dependsOn:
-    - name: gateway
     - name: tenant-boutique-dev
   wait: true
   timeout: 3m
@@ -209,7 +198,6 @@ spec:
     name: platform-blueprint
   path: ./k8s/apps/boutique-app/dev/loadgenerator
   dependsOn:
-    - name: gateway
     - name: tenant-boutique-dev
   wait: true
   timeout: 3m
@@ -227,7 +215,6 @@ spec:
     name: platform-blueprint
   path: ./k8s/apps/boutique-app/prod/frontend
   dependsOn:
-    - name: gateway
     - name: tenant-boutique-prod
   wait: true
   timeout: 3m
@@ -245,7 +232,6 @@ spec:
     name: platform-blueprint
   path: ./k8s/apps/boutique-app/prod/cartservice
   dependsOn:
-    - name: gateway
     - name: tenant-boutique-prod
   wait: true
   timeout: 3m
@@ -263,7 +249,6 @@ spec:
     name: platform-blueprint
   path: ./k8s/apps/boutique-app/prod/checkoutservice
   dependsOn:
-    - name: gateway
     - name: tenant-boutique-prod
   wait: true
   timeout: 3m
@@ -281,7 +266,6 @@ spec:
     name: platform-blueprint
   path: ./k8s/apps/boutique-app/prod/currencyservice
   dependsOn:
-    - name: gateway
     - name: tenant-boutique-prod
   wait: true
   timeout: 3m
@@ -299,7 +283,6 @@ spec:
     name: platform-blueprint
   path: ./k8s/apps/boutique-app/prod/emailservice
   dependsOn:
-    - name: gateway
     - name: tenant-boutique-prod
   wait: true
   timeout: 3m
@@ -317,7 +300,6 @@ spec:
     name: platform-blueprint
   path: ./k8s/apps/boutique-app/prod/paymentservice
   dependsOn:
-    - name: gateway
     - name: tenant-boutique-prod
   wait: true
   timeout: 3m
@@ -335,7 +317,6 @@ spec:
     name: platform-blueprint
   path: ./k8s/apps/boutique-app/prod/productcatalogservice
   dependsOn:
-    - name: gateway
     - name: tenant-boutique-prod
   wait: true
   timeout: 3m
@@ -353,7 +334,6 @@ spec:
     name: platform-blueprint
   path: ./k8s/apps/boutique-app/prod/recommendationservice
   dependsOn:
-    - name: gateway
     - name: tenant-boutique-prod
   wait: true
   timeout: 3m
@@ -371,7 +351,6 @@ spec:
     name: platform-blueprint
   path: ./k8s/apps/boutique-app/prod/shippingservice
   dependsOn:
-    - name: gateway
     - name: tenant-boutique-prod
   wait: true
   timeout: 3m
@@ -389,7 +368,6 @@ spec:
     name: platform-blueprint
   path: ./k8s/apps/boutique-app/prod/adservice
   dependsOn:
-    - name: gateway
     - name: tenant-boutique-prod
   wait: true
   timeout: 3m
@@ -407,7 +385,6 @@ spec:
     name: platform-blueprint
   path: ./k8s/apps/boutique-app/prod/shoppingassistantservice
   dependsOn:
-    - name: gateway
     - name: tenant-boutique-prod
   wait: true
   timeout: 3m
@@ -425,7 +402,6 @@ spec:
     name: platform-blueprint
   path: ./k8s/apps/boutique-app/prod/loadgenerator
   dependsOn:
-    - name: gateway
     - name: tenant-boutique-prod
   wait: true
   timeout: 3m

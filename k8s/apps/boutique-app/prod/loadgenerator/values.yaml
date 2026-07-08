@@ -44,12 +44,12 @@ route:
     - boutique-app.example.com
 
 nodeSelector:
-  aks-platform.azure.com/node-purpose: user
-  aks-platform.azure.com/capacity: spot
+  aks-platform.azure.com/node-purpose: app-workload
+  aks-platform.azure.com/capacity: on-demand
 tolerations:
-  - key: aks-platform.azure.com/capacity
+  - key: workload
     operator: Equal
-    value: spot
+    value: app-workload
     effect: NoSchedule
 topologySpreadConstraints:
   - maxSkew: 1

@@ -38,9 +38,13 @@ route:
     - boutique-app-dev.example.com
 
 nodeSelector:
-  aks-platform.azure.com/node-purpose: user
+  aks-platform.azure.com/node-purpose: app-workload
   aks-platform.azure.com/capacity: on-demand
-tolerations: []
+tolerations:
+  - key: workload
+    operator: Equal
+    value: app-workload
+    effect: NoSchedule
 topologySpreadConstraints:
   - maxSkew: 1
     topologyKey: topology.kubernetes.io/zone
