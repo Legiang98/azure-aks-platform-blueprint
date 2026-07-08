@@ -19,7 +19,7 @@ spec:
     nameOverride: frontend
     replicaCount: 1
     image:
-      repository: <acr-name>.azurecr.io/boutique/frontend
+      repository: craksplatformsea001.azurecr.io/boutique/frontend
       tag: "0.1.0"
       pullPolicy: IfNotPresent
     platform:

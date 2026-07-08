@@ -19,7 +19,7 @@ spec:
     nameOverride: paymentservice
     replicaCount: 1
     image:
-      repository: <acr-name>.azurecr.io/boutique/paymentservice
+      repository: craksplatformsea001.azurecr.io/boutique/paymentservice
       tag: "0.1.0"
       pullPolicy: IfNotPresent
     platform:

@@ -19,7 +19,7 @@ spec:
     nameOverride: cartservice
     replicaCount: 1
     image:
-      repository: <acr-name>.azurecr.io/boutique/cartservice
+      repository: craksplatformsea001.azurecr.io/boutique/cartservice
       tag: "0.1.0"
       pullPolicy: IfNotPresent
     platform:

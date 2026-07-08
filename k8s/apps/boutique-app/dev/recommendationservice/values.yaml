@@ -4,7 +4,7 @@ service:
 nameOverride: recommendationservice
 
 image:
-  repository: ghcr.io/example/boutique-recommendationservice
+  repository: craksplatformsea001.azurecr.io/boutique/recommendationservice
   tag: "0.1.0"
   pullPolicy: IfNotPresent
 

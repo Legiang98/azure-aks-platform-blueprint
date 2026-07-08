@@ -4,7 +4,7 @@ service:
 nameOverride: shoppingassistantservice
 
 image:
-  repository: ghcr.io/example/boutique-shoppingassistantservice
+  repository: craksplatformsea001.azurecr.io/boutique/shoppingassistantservice
   tag: "0.1.0"
   pullPolicy: IfNotPresent
 

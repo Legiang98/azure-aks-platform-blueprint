@@ -26,7 +26,7 @@ spec:
       targetCPUUtilizationPercentage: 70
       targetMemoryUtilizationPercentage: null
     image:
-      repository: <acr-name>.azurecr.io/boutique/loadgenerator
+      repository: craksplatformsea001.azurecr.io/boutique/loadgenerator
       tag: "0.1.0"
       pullPolicy: IfNotPresent
     platform:

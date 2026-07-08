@@ -4,7 +4,7 @@ service:
 nameOverride: paymentservice
 
 image:
-  repository: ghcr.io/example/boutique-paymentservice
+  repository: craksplatformsea001.azurecr.io/boutique/paymentservice
   tag: "0.1.0"
   pullPolicy: IfNotPresent
 

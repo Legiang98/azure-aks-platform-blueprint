@@ -4,7 +4,7 @@ service:
 nameOverride: shippingservice
 
 image:
-  repository: ghcr.io/example/boutique-shippingservice
+  repository: craksplatformsea001.azurecr.io/boutique/shippingservice
   tag: "0.1.0"
   pullPolicy: IfNotPresent
 

@@ -19,7 +19,7 @@ spec:
     nameOverride: currencyservice
     replicaCount: 1
     image:
-      repository: <acr-name>.azurecr.io/boutique/currencyservice
+      repository: craksplatformsea001.azurecr.io/boutique/currencyservice
       tag: "0.1.0"
       pullPolicy: IfNotPresent
     platform:

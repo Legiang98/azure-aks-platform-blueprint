@@ -4,7 +4,7 @@ service:
 nameOverride: emailservice
 
 image:
-  repository: ghcr.io/example/boutique-emailservice
+  repository: craksplatformsea001.azurecr.io/boutique/emailservice
   tag: "0.1.0"
   pullPolicy: IfNotPresent
 

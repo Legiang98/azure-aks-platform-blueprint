@@ -4,7 +4,7 @@ service:
 nameOverride: currencyservice
 
 image:
-  repository: ghcr.io/example/boutique-currencyservice
+  repository: craksplatformsea001.azurecr.io/boutique/currencyservice
   tag: "0.1.0"
   pullPolicy: IfNotPresent
 

@@ -25,7 +25,7 @@ spec:
       targetCPUUtilizationPercentage: 70
       targetMemoryUtilizationPercentage: null
     image:
-      repository: <acr-name>.azurecr.io/boutique/productcatalogservice
+      repository: craksplatformsea001.azurecr.io/boutique/productcatalogservice
       tag: "0.1.0"
       pullPolicy: IfNotPresent
     platform:

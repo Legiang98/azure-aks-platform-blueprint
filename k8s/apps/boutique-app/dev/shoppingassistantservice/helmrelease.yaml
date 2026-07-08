@@ -20,7 +20,7 @@ spec:
     nameOverride: shoppingassistantservice
     replicaCount: 1
     image:
-      repository: <acr-name>.azurecr.io/boutique/shoppingassistantservice
+      repository: craksplatformsea001.azurecr.io/boutique/shoppingassistantservice
       tag: "0.1.0"
       pullPolicy: IfNotPresent
     platform:

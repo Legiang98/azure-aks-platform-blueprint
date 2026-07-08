@@ -4,7 +4,7 @@ service:
 nameOverride: loadgenerator
 
 image:
-  repository: ghcr.io/example/boutique-loadgenerator
+  repository: craksplatformsea001.azurecr.io/boutique/loadgenerator
   tag: "0.1.0"
   pullPolicy: IfNotPresent
 

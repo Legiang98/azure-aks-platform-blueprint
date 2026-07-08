@@ -4,7 +4,7 @@ service:
 nameOverride: frontend
 
 image:
-  repository: ghcr.io/example/boutique-frontend
+  repository: craksplatformsea001.azurecr.io/boutique/frontend
   tag: "0.1.0"
   pullPolicy: IfNotPresent
 
