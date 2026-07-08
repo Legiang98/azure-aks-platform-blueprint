@@ -51,7 +51,7 @@ spec:
       type: ClusterIP
       port: 80
     route:
-      enabled: true
+      enabled: false
       gatewayName: shared-public
       gatewayNamespace: gateway-system
       hostnames:

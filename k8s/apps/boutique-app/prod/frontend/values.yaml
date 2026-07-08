@@ -37,7 +37,7 @@ platform:
     mountPath: /app/config/app-settings.json
 
 route:
-  enabled: true
+  enabled: false
   gatewayName: shared-public
   gatewayNamespace: gateway-system
   hostnames:
