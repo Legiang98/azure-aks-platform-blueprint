@@ -24,4 +24,4 @@ k8s/flux/bootstrap
 
 Tenant baseline resources are reconciled before app releases. Application workloads are packaged with Helm and reconciled with Flux `HelmRelease`.
 
-This repo does not use local Kustomize overlays for app packaging. The only `Kustomization` objects are Flux CRDs under `k8s/flux/`.
+Each service folder under `k8s/apps/boutique-app/<env>/<service>/` includes a small local `kustomization.yaml` file that lists the service `HelmRelease` and app settings ConfigMap. Flux `Kustomization` CRDs under `k8s/flux/` point to those folders, and kustomize-controller builds the local resource list before applying it.

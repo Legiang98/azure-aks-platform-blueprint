@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "platform-service.fullname" . }}
+  name: {{ include "platform-app-service.fullname" . }}
   labels:
-    {{- include "platform-service.labels" . | nindent 4 }}
+    {{- include "platform-app-service.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "platform-service.selectorLabels" . | nindent 6 }}
+      {{- include "platform-app-service.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "platform-service.labels" . | nindent 8 }}
+        {{- include "platform-app-service.labels" . | nindent 8 }}
         {{- if .Values.serviceAccount.workloadIdentity.enabled }}
         azure.workload.identity/use: "true"
         {{- end }}
@@ -26,7 +26,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
-      serviceAccountName: {{ include "platform-service.serviceAccountName" . }}
+      serviceAccountName: {{ include "platform-app-service.serviceAccountName" . }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -44,7 +44,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
-        - name: {{ include "platform-service.name" . }}
+        - name: {{ include "platform-app-service.name" . }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
@@ -54,7 +54,7 @@ spec:
             - name: PLATFORM_ENVIRONMENT
               value: {{ .Values.platform.environment | quote }}
             - name: PLATFORM_SERVICE_NAME
-              value: {{ include "platform-service.name" . | quote }}
+              value: {{ include "platform-app-service.name" . | quote }}
             {{- if .Values.platform.keyVaultUrl }}
             - name: PLATFORM_KEY_VAULT_URL
               value: {{ .Values.platform.keyVaultUrl | quote }}

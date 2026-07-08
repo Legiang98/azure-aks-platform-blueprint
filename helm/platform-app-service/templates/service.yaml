@@ -2,13 +2,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "platform-service.fullname" . }}
+  name: {{ include "platform-app-service.fullname" . }}
   labels:
-    {{- include "platform-service.labels" . | nindent 4 }}
+    {{- include "platform-app-service.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   selector:
-    {{- include "platform-service.selectorLabels" . | nindent 4 }}
+    {{- include "platform-app-service.selectorLabels" . | nindent 4 }}
   ports:
     - name: http
       port: {{ .Values.service.port }}

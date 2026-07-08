@@ -11,7 +11,7 @@ Envoy Gateway itself is installed from the official versioned upstream manifest.
 
 Tenant routes are packaged in the app Helm chart and reconciled by Flux:
 
-- `helm/platform-service/templates/httproute.yaml`
+- `helm/platform-app-service/templates/httproute.yaml`
 - `k8s/apps/boutique-app/dev/frontend/helmrelease.yaml`
 - `k8s/apps/boutique-app/prod/frontend/helmrelease.yaml`
 

@@ -1,6 +1,6 @@
 # Boutique App GitOps Releases
 
-`boutique-app` is deployed with Flux `HelmRelease` resources. The reusable Helm chart template lives under `helm/platform-service`.
+`boutique-app` is deployed with Flux `HelmRelease` resources. The reusable Helm chart template lives under `helm/platform-app-service`.
 
 ## Layout
 
@@ -27,7 +27,7 @@ The chart assumes the platform baseline has already created the target namespace
 ## Local Render
 
 ```bash
-helm template frontend helm/platform-service --namespace tenant-boutique-dev \
+helm template frontend helm/platform-app-service --namespace tenant-boutique-dev \
   --values k8s/apps/boutique-app/dev/frontend/values.yaml
 ```
 
@@ -38,6 +38,13 @@ The sample `HelmRelease` files reference a Flux `GitRepository` named `platform-
 The Flux reconciliation graph is defined under `k8s/flux/clusters/aks-platform/apps.yaml`. App releases depend on the shared Gateway and the matching tenant baseline.
 
 Each microservice has a cluster-level Flux `Kustomization` so Flux can reconcile services independently while still sharing the same reusable Helm chart template.
+
+Each service folder also includes a local `kustomization.yaml` with:
+
+- `app-settings.yaml`
+- `helmrelease.yaml`
+
+This keeps the Flux path explicit: the Flux `Kustomization` CRD points to the service folder, and the local Kustomize file tells kustomize-controller which resources belong to that service release.
 
 ## HA And Autoscaling Placement
 

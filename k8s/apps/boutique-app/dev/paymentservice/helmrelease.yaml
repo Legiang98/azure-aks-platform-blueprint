@@ -7,7 +7,7 @@ spec:
   interval: 10m
   chartRef:
     kind: OCIRepository
-    name: platform-service-chart
+    name: platform-app-service-chart
     namespace: flux-system
   install:
     remediation:

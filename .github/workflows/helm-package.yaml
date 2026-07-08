@@ -14,12 +14,12 @@ permissions:
   id-token: write
 
 env:
-  CHART_PATH: helm/platform-service
+  CHART_PATH: helm/platform-app-service
   CHART_REPOSITORY: helm
 
 jobs:
-  package-platform-service:
-    name: Package platform-service chart
+  package-platform-app-service:
+    name: Package platform-app-service chart
     runs-on: ubuntu-latest
 
     steps:

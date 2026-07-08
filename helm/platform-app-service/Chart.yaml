@@ -1,5 +1,5 @@
 apiVersion: v2
-name: platform-service
+name: platform-app-service
 description: Reusable service chart for the AKS platform blueprint.
 type: application
 version: 0.1.0

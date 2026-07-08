@@ -1,0 +1,61 @@
+name: Kubernetes Render Validation
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "helm/**"
+      - "k8s/**"
+      - ".github/workflows/k8s-render-validation.yaml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "helm/**"
+      - "k8s/**"
+      - ".github/workflows/k8s-render-validation.yaml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate Helm and Kustomize rendering
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v4
+
+      - name: Lint reusable platform app service chart
+        run: helm lint helm/platform-app-service
+
+      - name: Render representative service values
+        run: |
+          helm template frontend-dev helm/platform-app-service \
+            --namespace tenant-boutique-dev \
+            --values k8s/apps/boutique-app/dev/frontend/values.yaml
+          helm template frontend-prod helm/platform-app-service \
+            --namespace tenant-boutique-prod \
+            --values k8s/apps/boutique-app/prod/frontend/values.yaml
+          helm template loadgenerator-prod helm/platform-app-service \
+            --namespace tenant-boutique-prod \
+            --values k8s/apps/boutique-app/prod/loadgenerator/values.yaml
+
+      - name: Parse Kubernetes YAML
+        run: |
+          ruby -e 'require "yaml"; ARGV.each { |p| YAML.load_stream(File.read(p)) }; puts "Validated #{ARGV.length} YAML files."' $(find k8s -name '*.yaml' -type f | sort)
+
+      - name: Build Flux app paths with Kustomize
+        run: |
+          while IFS= read -r path; do
+            kubectl kustomize "$path" >/dev/null
+          done < <(find k8s/apps/boutique-app -mindepth 3 -maxdepth 3 -name kustomization.yaml -type f -exec dirname {} \; | sort)

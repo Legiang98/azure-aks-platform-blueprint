@@ -1,0 +1,1 @@
+{{ include "platform-app-service.fullname" . }} has been rendered from the reusable platform-app-service chart.
