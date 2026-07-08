@@ -5,16 +5,13 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$REPO_ROOT"
 
-GIT_URL="${GIT_URL:-}"
+# Demo defaults for the public AKS platform blueprint. Override these
+# environment variables only when reusing the script for another repo/cluster.
+GIT_URL="${GIT_URL:-https://github.com/Legiang98/azure-aks-platform-blueprint.git}"
 GIT_BRANCH="${GIT_BRANCH:-main}"
 GIT_PATH="${GIT_PATH:-./k8s/flux/clusters/aks-platform}"
 ACR_NAME="${ACR_NAME:-craksplatformsea001}"
-
-if [ -z "$GIT_URL" ]; then
-  echo "GIT_URL is required."
-  echo "Example: GIT_URL=https://github.com/<owner>/<repo>.git ./scripts/bootstrap-flux.sh"
-  exit 1
-fi
+FLUX_TOLERATION_KEYS="${FLUX_TOLERATION_KEYS:-CriticalAddonsOnly}"
 
 command -v flux >/dev/null 2>&1 || {
   echo "flux CLI is required. Install it first, then rerun this script."
@@ -32,7 +29,8 @@ command -v az >/dev/null 2>&1 || {
 }
 
 echo "Installing Flux controllers"
-flux install
+echo "  toleration keys: $FLUX_TOLERATION_KEYS"
+flux install --toleration-keys="$FLUX_TOLERATION_KEYS"
 
 echo "Creating ACR OCI auth secret for Flux source-controller"
 ACR_LOGIN_SERVER="$(az acr show --name "$ACR_NAME" --query loginServer -o tsv)"
@@ -47,6 +45,9 @@ kubectl create secret docker-registry acr-oci-auth \
   -o yaml | kubectl apply -f -
 
 echo "Applying Flux Git source and root kustomization"
+echo "  repository: $GIT_URL"
+echo "  branch: $GIT_BRANCH"
+echo "  path: $GIT_PATH"
 cat <<EOF | kubectl apply -f -
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: GitRepository
@@ -81,6 +82,9 @@ flux reconcile kustomization platform-root --namespace flux-system
 
 echo "Flux bootstrap complete."
 echo "Check status with:"
+echo "  flux get sources git -A"
 echo "  flux get sources oci -A"
+echo "  flux get kustomizations -A"
 echo "  flux get helmreleases -A"
-echo "  kubectl get pods -n platform-monitoring"
+echo "  kubectl get pods -n flux-system -o wide"
+echo "  kubectl get pods -n observability"

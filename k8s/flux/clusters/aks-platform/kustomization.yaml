@@ -2,9 +2,10 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - helm-sources.yaml
+  - ../observability
   # Re-enable these when returning to the full portfolio reconciliation graph.
   # - monitoring-dashboard.yaml
   # - node-provisioning.yaml
-  # - gateway.yaml
-  # - tenants.yaml
-  # - apps.yaml
+  - gateway.yaml
+  - tenants.yaml
+  - apps.yaml
